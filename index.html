@@ -97,7 +97,16 @@
       color: #14141f;
       box-shadow: inset -4px -4px 0px #2b93b5, inset 4px 4px 0px #90e0ef, 0 4px 0px var(--pixel-border);
     }
-
+    .pixel-btn-green {
+      background-color: #34d399;
+      color: #14141f;
+      box-shadow: inset -4px -4px 0px #059669, inset 4px 4px 0px #a7f3d0, 0 4px 0px var(--pixel-border);
+    }
+    .pixel-btn-dark {
+      background-color: #23222b;
+      color: #ffffff;
+      box-shadow: inset -4px -4px 0px #0f0e14, inset 4px 4px 0px #454354, 0 4px 0px #000000;
+    }
     #game-wrapper {
       width: 100%;
       max-width: 520px;
@@ -226,11 +235,18 @@
           <button id="btn-restart" type="button" class="pixel-btn pixel-btn-gold w-full py-3.5 text-lg font-bold">
             ↻ 다시 하기
           </button>
-          <!-- X 공유하기 버튼 (↻ 다시 하기 버튼 바로 아래) -->
-          <a id="btn-share-x" href="https://x.com/intent/tweet" target="_blank" rel="noopener noreferrer" class="pixel-btn pixel-btn-dark w-full py-2.5 text-xs sm:text-sm font-bold gap-1.5">
-            <span>𝕏</span>
-            <span>X에 공유하기</span>
-          </a>
+          <!-- 기존 X에 공유하기 한 줄짜리 <a>는 지우고 아래 1-2 코드로 교체 -->
+          <div class="w-full grid grid-cols-2 gap-2 pt-1">
+            <button id="btn-save-score" type="button" class="pixel-btn pixel-btn-green w-full py-2.5 text-xs font-bold">
+              📷 점수 저장
+            </button>
+            <a id="btn-share-x" href="https://x.com/intent/tweet" target="_blank" rel="noopener noreferrer" class="pixel-btn pixel-btn-dark w-full py-2.5 text-xs font-bold gap-1" style="text-decoration:none;">
+              <span>𝕏</span>
+              <span>X 공유</span>
+            </a>
+          </div>
+          <p id="save-status" class="text-[11px] text-[#059669] min-h-[16px]"></p>
+
         </div>
       </div>
     </main>
@@ -534,6 +550,9 @@
     const gameoverOverlay = document.getElementById('gameover-overlay');
     const btnStart = document.getElementById('btn-start');
     const btnRestart = document.getElementById('btn-restart');
+    const btnSaveScore = document.getElementById('btn-save-score');
+    const btnShareX = document.getElementById('btn-share-x');
+    const saveStatus = document.getElementById('save-status');
     const btnLeft = document.getElementById('btn-left');
     const btnRight = document.getElementById('btn-right');
 
@@ -680,6 +699,13 @@
       document.getElementById('final-score').textContent = score.toLocaleString() + ' PTS';
       document.getElementById('final-caps').textContent = stackedCaps.length + ' 개';
       document.getElementById('final-best').textContent = bestScore.toLocaleString() + ' PTS';
+
+    const pageUrl = window.location.href;
+    const shareText = `🧢 또리 캡모자 쌓기에서 캡모자 ${stackedCaps.length}개 쌓고 ${score.toLocaleString()}점 달성!`;
+    if (btnShareX) {
+      btnShareX.href = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
+}
+    if (saveStatus) saveStatus.textContent = '';
 
       gameoverOverlay.classList.remove('hidden');
     }
@@ -1170,6 +1196,56 @@
     resizeCanvas();
     updateHeartsUI();
     renderPreviewDuck();
+    if (btnSaveScore) {
+  btnSaveScore.addEventListener('click', () => {
+    const card = document.createElement('canvas');
+    card.width = 600;
+    card.height = 340;
+    const cctx = card.getContext('2d');
+    cctx.imageSmoothingEnabled = false;
+
+    cctx.fillStyle = '#181824';
+    cctx.fillRect(0, 0, 600, 340);
+    cctx.fillStyle = '#fffdf7';
+    cctx.fillRect(24, 24, 552, 292);
+    cctx.strokeStyle = '#23222b';
+    cctx.lineWidth = 6;
+    cctx.strokeRect(24, 24, 552, 292);
+
+    cctx.fillStyle = '#f44755';
+    cctx.font = 'bold 28px "DungGeunMo", monospace';
+    cctx.fillText('또리 캡모자 쌓기! SCORE', 52, 78);
+
+    cctx.fillStyle = '#23222b';
+    cctx.font = 'bold 24px "DungGeunMo", monospace';
+    cctx.fillText(`최종 점수 : ${score.toLocaleString()} PTS`, 52, 138);
+    cctx.fillStyle = '#3b82f6';
+    cctx.fillText(`쌓은 모자 : ${stackedCaps.length} 개`, 52, 184);
+    cctx.fillStyle = '#d49b17';
+    cctx.fillText(`최고 기록 : ${bestScore.toLocaleString()} PTS`, 52, 230);
+
+    cctx.fillStyle = '#6b7280';
+    cctx.font = '15px "DungGeunMo", monospace';
+    cctx.fillText(window.location.href, 52, 286);
+
+    const pSize = 4;
+    drawDuckCharacter(cctx, 475, 285, pSize, false, 0);
+    const duckH = DUCK_BASE_GRID.length * pSize;
+    const capCount = Math.min(stackedCaps.length, 6);
+    for (let i = 0; i < capCount; i++) {
+      const capY = 285 - duckH + (4 * pSize) - (i * 3 * pSize);
+      drawPixelCap(cctx, 475, capY, pSize, stackedCaps[i].colorScheme, stackedCaps[i].dir);
+    }
+
+    const link = document.createElement('a');
+    link.download = 'ddory_cap_score.png';
+    link.href = card.toDataURL('image/png');
+    link.click();
+
+    if (saveStatus) saveStatus.textContent = '점수 이미지가 저장되었어요!';
+  });
+}
+
     requestAnimationFrame(gameLoop);
   </script>
 </body>
