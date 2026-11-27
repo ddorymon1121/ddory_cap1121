@@ -242,7 +242,7 @@
             </button>
             <a id="btn-share-x" href="https://x.com/intent/tweet" target="_blank" rel="noopener noreferrer" class="pixel-btn pixel-btn-dark w-full py-2.5 text-xs font-bold gap-1" style="text-decoration:none;">
               <span>𝕏</span>
-              <span>X 공유</span>
+              <span>에 공유</span>
             </a>
           </div>
           <p id="save-status" class="text-[11px] text-[#059669] min-h-[16px]"></p>
@@ -1197,6 +1197,7 @@
     updateHeartsUI();
     renderPreviewDuck();
     if (btnSaveScore) {
+  if (btnSaveScore) {
   btnSaveScore.addEventListener('click', () => {
     const card = document.createElement('canvas');
     card.width = 600;
@@ -1237,12 +1238,23 @@
       drawPixelCap(cctx, 475, capY, pSize, stackedCaps[i].colorScheme, stackedCaps[i].dir);
     }
 
-    const link = document.createElement('a');
-    link.download = 'ddory_cap_score.png';
-    link.href = card.toDataURL('image/png');
-    link.click();
-
-    if (saveStatus) saveStatus.textContent = '점수 이미지가 저장되었어요!';
+    card.toBlob(async (blob) => {
+      if (!blob) return;
+      const file = new File([blob], 'ddory_cap_score.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: '또리 캡모자 쌓기!' });
+          if (saveStatus) saveStatus.textContent = '공유 창에서 [이미지 저장]을 눌러주세요!';
+          return;
+        } catch (err) {}
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ddory_cap_score.png';
+      a.click();
+      if (saveStatus) saveStatus.textContent = '다운로드를 누른 뒤 사진에 저장하세요!';
+    }, 'image/png');
   });
 }
 
