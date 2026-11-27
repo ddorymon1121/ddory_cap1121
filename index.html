@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>덕 가드: 캡모자 쌓기!</title>
+  <!-- 픽셀 폰트 로드 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'DungGeunMo';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --pixel-bg: #181824;
+      --pixel-panel: #fffdf7;
+      --pixel-border: #23222b;
+      --pixel-accent: #f44755;
+      --pixel-gold: #ffca3a;
+      --pixel-blue: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #181824;
+      background-image: 
+        radial-gradient(#2c2c40 2px, transparent 2px),
+        radial-gradient(#2c2c40 2px, #181824 2px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+      font-family: 'DungGeunMo', 'Press Start 2P', monospace;
+      color: var(--pixel-border);
+      overflow: hidden;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pixel-box {
+      background-color: var(--pixel-panel);
+      border: 4px solid var(--pixel-border);
+      box-shadow: 
+        inset -4px -4px 0px #dedad0,
+        inset 4px 4px 0px #ffffff,
+        0 6px 0px rgba(0, 0, 0, 0.35);
+      image-rendering: pixelated;
+    }
+
+    .pixel-btn {
+      font-family: 'DungGeunMo', 'Press Start 2P', monospace;
+      border: 4px solid var(--pixel-border);
+      cursor: pointer;
+      transition: transform 0.06s steps(2);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      touch-action: manipulation;
+    }
+
+    .pixel-btn:active {
+      transform: translateY(4px);
+      box-shadow: none !important;
+    }
+
+    .pixel-btn-red {
+      background-color: #f44755;
+      color: #ffffff;
+      box-shadow: inset -4px -4px 0px #b82532, inset 4px 4px 0px #ff7b86, 0 4px 0px var(--pixel-border);
+    }
+
+    .pixel-btn-gold {
+      background-color: #ffca3a;
+      color: #23222b;
+      box-shadow: inset -4px -4px 0px #d49b17, inset 4px 4px 0px #ffe699, 0 4px 0px var(--pixel-border);
+    }
+
+    .pixel-btn-blue {
+      background-color: #4cc9f0;
+      color: #14141f;
+      box-shadow: inset -4px -4px 0px #2b93b5, inset 4px 4px 0px #90e0ef, 0 4px 0px var(--pixel-border);
+    }
+
+    #game-wrapper {
+      width: 100%;
+      max-width: 520px;
+      height: 100dvh;
+      max-height: 860px;
+      display: flex;
+      flex-direction: column;
+      padding: 8px;
+      gap: 8px;
+    }
+
+    #canvas-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      border: 4px solid var(--pixel-border);
+      box-shadow: 0 8px 0 rgba(0, 0, 0, 0.45);
+      background: #8ecae6;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    @keyframes pixelBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .animate-pixel-bounce {
+      animation: pixelBounce 0.9s steps(2) infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-wrapper">
+    <!-- 상단 HUD -->
+    <header class="pixel-box px-3 py-2 flex items-center justify-between gap-2 shrink-0">
+      <div class="flex flex-col">
+        <span class="text-[11px] text-gray-500 leading-tight">SCORE</span>
+        <span id="hud-score" class="text-lg sm:text-xl font-bold text-[#f44755] tracking-wider">00000</span>
+      </div>
+
+      <div class="flex flex-col items-center">
+        <span class="text-[11px] text-gray-500 leading-tight">CAPS</span>
+        <div class="flex items-center gap-1">
+          <span class="inline-block w-3 h-3 bg-[#3b82f6] border-2 border-[#23222b]"></span>
+          <span id="hud-caps" class="text-lg sm:text-xl font-bold text-[#23222b]">0</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-end">
+        <span class="text-[11px] text-gray-500 leading-tight">BEST</span>
+        <span id="hud-best" class="text-sm sm:text-base font-bold text-[#d49b17]">00000</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div id="hud-hearts" class="flex items-center gap-1" aria-label="남은 목숨"></div>
+        <button id="btn-sound" type="button" class="pixel-btn pixel-btn-gold w-9 h-9 text-sm" title="효과음 켜기/끄기">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- 게임 캔버스 영역 -->
+    <main id="canvas-container">
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- 시작 화면 오버레이 -->
+      <div id="start-overlay" class="absolute inset-0 bg-[#181824]/80 flex flex-col items-center justify-center p-4 z-30">
+        <div class="pixel-box p-4 sm:p-6 max-w-[360px] w-full flex flex-col items-center text-center gap-3 sm:gap-4">
+          <div class="bg-[#23222b] text-[#ffca3a] px-3 py-1 text-xs tracking-widest">
+            PIXEL ARCADE
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-[#23222b] leading-snug">
+            덕 가드<br/>
+            <span class="text-[#f44755]">캡모자 쌓기!</span>
+          </h1>
+
+          <!-- 캐릭터 픽셀 프리뷰 -->
+          <div class="bg-[#e8f4f8] border-4 border-[#23222b] p-2 flex items-center justify-center">
+            <canvas id="previewCanvas" width="128" height="128" class="w-28 h-28"></canvas>
+          </div>
+
+          <div class="text-xs sm:text-sm text-gray-700 space-y-1.5 bg-[#f4f1ea] border-2 border-[#23222b] p-3 w-full text-left">
+            <p>🧢 떨어지는 <b>캡모자</b>를 머리 위에 쌓으세요!</p>
+            <p>🎤 반짝이는 <b>마이크</b>를 잡으면 보너스 + 표정 변화 <span class="text-[#f44755] font-bold">&gt;.&lt; ♪</span></p>
+            <p>⌨️ 조작: <b>◀ / ▶ 버튼</b> 또는 화면 터치/드래그</p>
+          </div>
+
+          <button id="btn-start" type="button" class="pixel-btn pixel-btn-red w-full py-3.5 text-lg sm:text-xl font-bold animate-pixel-bounce">
+            ▶ 게임 시작
+          </button>
+        </div>
+      </div>
+
+      <!-- 게임 오버 오버레이 -->
+      <div id="gameover-overlay" class="hidden absolute inset-0 bg-[#181824]/85 flex flex-col items-center justify-center p-4 z-30">
+        <div class="pixel-box p-5 sm:p-6 max-w-[350px] w-full flex flex-col items-center text-center gap-4">
+          <div class="bg-[#f44755] text-white border-2 border-[#23222b] px-3 py-1 text-sm font-bold">
+            GAME OVER
+          </div>
+          <h2 class="text-2xl font-bold text-[#23222b]">모자 탑이 무너졌어요!</h2>
+
+          <div class="w-full bg-[#f4f1ea] border-4 border-[#23222b] p-3 space-y-2 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">최종 점수</span>
+              <span id="final-score" class="text-lg font-bold text-[#f44755]">0</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">쌓은 캡모자</span>
+              <span id="final-caps" class="text-lg font-bold text-[#3b82f6]">0 개</span>
+            </div>
+            <div class="flex justify-between items-center border-t-2 border-dashed border-gray-400 pt-2">
+              <span class="text-gray-600">최고 기록</span>
+              <span id="final-best" class="text-base font-bold text-[#d49b17]">0</span>
+            </div>
+          </div>
+
+          <button id="btn-restart" type="button" class="pixel-btn pixel-btn-gold w-full py-3.5 text-lg font-bold">
+            ↻ 다시 하기
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- 하단 컨트롤러 버튼 -->
+    <footer class="grid grid-cols-2 gap-3 shrink-0">
+      <button id="btn-left" type="button" class="pixel-btn pixel-btn-blue py-3.5 text-xl font-bold">
+        ◀ LEFT
+      </button>
+      <button id="btn-right" type="button" class="pixel-btn pixel-btn-blue py-3.5 text-xl font-bold">
+        RIGHT ▶
+      </button>
+    </footer>
+  </div>
+
+  <script>
+    /**
+     * ============================================================================
+     * 1. 레트로 8비트 사운드 합성기 (Web Audio API)
+     * ============================================================================
+     */
+    class PixelSound {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+
+      init() {
+        try {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+              this.ctx = new AudioCtx();
+            }
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+        } catch (err) {
+          // 오디오 초기화 실패 시에도 게임 진행 보장
+        }
+      }
+
+      toggleMute() {
+        this.muted = !this.muted;
+        return this.muted;
+      }
+
+      playTone(freq, type, duration, startTime = 0, vol = 0.14, slideFreq = null) {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const now = this.ctx.currentTime + startTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          if (slideFreq) {
+            osc.frequency.exponentialRampToValueAtTime(slideFreq, now + duration);
+          }
+
+          gain.gain.setValueAtTime(vol, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(now);
+          osc.stop(now + duration);
+        } catch (err) {
+          // 오디오 재생 예외 무시
+        }
+      }
+
+      playCapStack(combo = 1) {
+        const pitchBoost = Math.min(combo * 22, 340);
+        this.playTone(320 + pitchBoost, 'square', 0.08, 0, 0.13, 520 + pitchBoost);
+        this.playTone(480 + pitchBoost, 'triangle', 0.11, 0.05, 0.15, 680 + pitchBoost);
+      }
+
+      playMicBonus() {
+        const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          this.playTone(freq, 'square', 0.09, idx * 0.065, 0.13);
+        });
+      }
+
+      playMiss() {
+        this.playTone(190, 'sawtooth', 0.18, 0, 0.15, 95);
+      }
+
+      playGameOver() {
+        const notes = [392.00, 349.23, 329.63, 261.63];
+        notes.forEach((freq, idx) => {
+          this.playTone(freq, 'square', 0.22, idx * 0.18, 0.15);
+        });
+      }
+    }
+
+    const sfx = new PixelSound();
+
+    /**
+     * ============================================================================
+     * 2. 픽셀 오리 근위병 캐릭터 & 빅 사이즈 캡모자 도트 데이터
+     * ============================================================================
+     */
+    const DUCK_PALETTE = {
+      '.': null,
+      'K': '#26293a',   // 털모자 짙은 외곽선
+      'H': '#3f445c',   // 털모자 기본 슬레이트 블루
+      'D': '#32364a',   // 털모자 어두운 음영
+      'L': '#4f5570',   // 털모자 밝은 하이라이트
+      'W': '#ffffff',   // 하얀 깃털
+      'S': '#e6e4ee',   // 날개 연한 그림자
+      'G': '#c9c5d6',   // 날개 연보라빛 회색 외곽선
+      'C': '#4a2511',   // 머리/부리 짙은 갈색 외곽선
+      'B': '#ffb833',   // 주황/노란 부리 및 발
+      'O': '#9a3412',   // 부리 중앙선 & 발 테두리
+      'R': '#ef4444',   // 빨간 제복
+      'M': '#991b1b',   // 제복 어두운 붉은색 밑단 및 테두리
+      'Y': '#fde047',   // 노란 단추 & 견장
+      'E': '#3b1c0a'    // 눈동자 / 표정 짙은 갈색
+    };
+
+    const DUCK_BASE_GRID = [
+      ".........KKKKKKKK.........",
+      ".......KKHHHHHHHHKK.......",
+      "......KHHLLHHHHDDHHK......",
+      ".....KHHHLLHHHHHDDDHK.....",
+      "....KHHHHHHDDHHHHDDHHK....",
+      "....KHHDDHHDDHHHHHHLLK....",
+      "...KHHHDDDHHHHLLHHHHHHK...",
+      "...KHHHHHHLLHHLLHHHDDHK...",
+      "...KHHDDHHHHHHDDHHHDDHK...",
+      "..KHHHDDDHHDDHHHHHHDDHHK..",
+      "..KHHDDHHDDDDHHDDHHHHHHK..",
+      "..KHHDDHHDDDDHHDDHHDDHHK..",
+      "..KHHHHHHHHHHHHHHHHHHHHK..",
+      "...CWWWWWWWWWWWWWWWWWWC...",
+      "...CWEEEEEEWWWWEEEEEEWC...", // 14: 반타원 윗눈꺼풀
+      "...CWEWEEWEWWWWWEWEEWEC...", // 15: 반타원 눈동자 + 흰자위
+      "...CWEEWWEEWWWWEEWWEEWC...", // 16: 둥근 반타원 하단 곡선
+      "...CWWEEEEWWWWWWEEEEWWC...", // 17: 반타원 밑단
+      "...CWWWWWWWWBBWWWWWWWWC...", // 18: 부리 윗부분
+      "...CWWWWWWBBBBBBWWWCWWC...", // 19: 볼 점 1
+      "....CWWWBBBBBBBBBBWWC.C...", // 20: 부리 + 볼 점 2, 3
+      "....CWWWOOOOOOOOOOWWWWC...", // 21: 부리 가운데 가로선
+      ".....CWWBBBBBBBBBBWWWC....", // 22: 부리 아랫부분
+      "....CYYCMMMMMMMMMMCYYC....", // 23: 노란 견장 + 빨간 옷 깃
+      "..GGGYYCRRRRRRRRRRCYYGGG..", // 24: 연보라 테두리 날개 + 제복
+      ".GWWWWWSRRRRYYRRRRWWWWWWG.", // 25: 날개 + 첫째 단추
+      "GWWWWWWWRRRRRRRRRRWWWWWWWG", // 26: 날개
+      "GWWWWWWWRRRRYYRRRRWWWWWWWG", // 27: 날개 + 둘째 단추
+      ".GWWSSWSRRRRRRRRRRSWSSWWG.", // 28: 날개 아랫부분
+      "..GGGGG.MRRRYYRRRM.GGGGG..", // 29: 날개 하단 테두리 + 셋째 단추
+      "........MRRRRRRRRM........", // 30: 제복 밑단
+      ".........MMMMMMMM.........", // 31: 제복 어두운 붉은색 밑단
+      ".........OBBO.OBBO........", // 32: 다리
+      "........OBBBO.OBBBO.......", // 33: 발
+      ".........OOO...OOO........"  // 34: 발바닥 테두리
+    ];
+
+    const HAPPY_FACE_PATCH = {
+      14: "...CWWEEWWWWWWWWWWEEWWC...",
+      15: "...CWWWWEEWWWWWWEEWWWWC...",
+      16: "...CWWEEWWWWWWWWWWEEWWC...",
+      17: "...CWWWWWWWWWWWWWWWWWWC..."
+    };
+
+    function drawDuckCharacter(ctx, centerX, bottomY, pixelSize, isHappy = false, walkFrame = 0) {
+      const rows = DUCK_BASE_GRID.length;
+      const cols = DUCK_BASE_GRID[0].length;
+      const startX = Math.round(centerX - (cols * pixelSize) / 2);
+      const startY = Math.round(bottomY - rows * pixelSize);
+
+      for (let r = 0; r < rows; r++) {
+        let rowStr = DUCK_BASE_GRID[r];
+        if (isHappy && HAPPY_FACE_PATCH[r]) {
+          rowStr = HAPPY_FACE_PATCH[r];
+        }
+
+        for (let c = 0; c < cols; c++) {
+          const ch = rowStr[c];
+          const color = DUCK_PALETTE[ch];
+          if (!color) continue;
+
+          let drawY = startY + r * pixelSize;
+          if (r >= 32 && walkFrame !== 0) {
+            const isLeftFoot = c < cols / 2;
+            if ((walkFrame === 1 && isLeftFoot) || (walkFrame === 2 && !isLeftFoot)) {
+              drawY -= pixelSize;
+            }
+          }
+
+          ctx.fillStyle = color;
+          ctx.fillRect(startX + c * pixelSize, drawY, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    const CAP_COLORS = [
+      { main: '#ef4444', dark: '#b91c1c', visor: '#991b1b', logo: '#ffffff' },
+      { main: '#3b82f6', dark: '#1d4ed8', visor: '#1e3a8a', logo: '#fde047' },
+      { main: '#10b981', dark: '#047857', visor: '#065f46', logo: '#ffffff' },
+      { main: '#f59e0b', dark: '#b45309', visor: '#78350f', logo: '#ffffff' },
+      { main: '#8b5cf6', dark: '#6d28d9', visor: '#4c1d95', logo: '#fde047' },
+      { main: '#ec4899', dark: '#be185d', visor: '#831843', logo: '#ffffff' },
+      { main: '#06b6d4', dark: '#0e7490', visor: '#164e63', logo: '#ffffff' }
+    ];
+
+    function drawPixelCap(ctx, centerX, bottomY, pixelSize, colorScheme, dir = 1) {
+      const capGridRight = [
+        ".....KKKKKKKK.........",
+        "...KKMMMMMMMMKK.......",
+        "..KMMMMMWWMMMMMK......",
+        ".KMMMMMMWWMMMMMMK.....",
+        ".KMMMMMMMMMMMMMMKKKK..",
+        "KDDDDDDDDDDDDDDVVVVVK.",
+        "KKKKKKKKKKKKKKKKKKKKKK"
+      ];
+
+      const rows = capGridRight.length;
+      const cols = capGridRight[0].length;
+      const crownCenterOffset = dir === 1 ? (8 * pixelSize) : ((cols - 8) * pixelSize);
+      const startX = Math.round(centerX - crownCenterOffset);
+      const startY = Math.round(bottomY - rows * pixelSize);
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const srcCol = dir === 1 ? c : (cols - 1 - c);
+          const ch = capGridRight[r][srcCol];
+          if (ch === '.') continue;
+
+          if (ch === 'K') ctx.fillStyle = '#23222b';
+          else if (ch === 'M') ctx.fillStyle = colorScheme.main;
+          else if (ch === 'D') ctx.fillStyle = colorScheme.dark;
+          else if (ch === 'V') ctx.fillStyle = colorScheme.visor;
+          else if (ch === 'W') ctx.fillStyle = colorScheme.logo;
+
+          ctx.fillRect(startX + c * pixelSize, startY + r * pixelSize, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    function drawPixelMic(ctx, centerX, centerY, pixelSize) {
+      const micGrid = [
+        "...KKKK...",
+        "..KGGGGK..",
+        ".KGLLLLGK.",
+        ".KGLGGLGK.",
+        ".KGGGGGGK.",
+        "..KKKKKK..",
+        "...KDDK...",
+        "...KSSK...",
+        "...KSSK...",
+        "...KDDK...",
+        "...KSSK...",
+        "....KK...."
+      ];
+      const rows = micGrid.length;
+      const cols = micGrid[0].length;
+      const startX = Math.round(centerX - (cols * pixelSize) / 2);
+      const startY = Math.round(centerY - (rows * pixelSize) / 2);
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const ch = micGrid[r][c];
+          if (ch === '.') continue;
+          if (ch === 'K') ctx.fillStyle = '#23222b';
+          else if (ch === 'G') ctx.fillStyle = '#9ca3af';
+          else if (ch === 'L') ctx.fillStyle = '#f3f4f6';
+          else if (ch === 'D') ctx.fillStyle = '#374151';
+          else if (ch === 'S') ctx.fillStyle = '#60a5fa';
+
+          ctx.fillRect(startX + c * pixelSize, startY + r * pixelSize, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 3. 게임 상태 및 초기화
+     * ============================================================================
+     */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const previewCanvas = document.getElementById('previewCanvas');
+    const previewCtx = previewCanvas.getContext('2d');
+
+    const hudScore = document.getElementById('hud-score');
+    const hudCaps = document.getElementById('hud-caps');
+    const hudBest = document.getElementById('hud-best');
+    const hudHearts = document.getElementById('hud-hearts');
+    const btnSound = document.getElementById('btn-sound');
+    const startOverlay = document.getElementById('start-overlay');
+    const gameoverOverlay = document.getElementById('gameover-overlay');
+    const btnStart = document.getElementById('btn-start');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+
+    let bestScore = 0;
+    try {
+      bestScore = parseInt(localStorage.getItem('duck_cap_best') || '0', 10) || 0;
+    } catch (e) {
+      bestScore = 0;
+    }
+    hudBest.textContent = String(bestScore).padStart(5, '0');
+
+    const PIXEL = 4;
+    let gameState = 'START';
+    let score = 0;
+    let combo = 0;
+    let lives = 3;
+    let lastTime = 0;
+    let spawnTimer = 0;
+    let micSpawnTimer = 0;
+    let cameraY = 0;
+
+    const keys = { left: false, right: false };
+    let pointerActive = false;
+    let pointerTargetX = null;
+
+    const player = {
+      x: 240,
+      y: 0,
+      vx: 0,
+      speed: 420,
+      dir: 1,
+      walkTimer: 0,
+      walkFrame: 0,
+      happyTimer: 0,
+      noteSpawnTimer: 0
+    };
+
+    let stackedCaps = [];
+    let fallingItems = [];
+    let particles = [];
+    let floatingEffects = [];
+
+    const clouds = [
+      { x: 60, y: 90, scale: 4, speed: 12 },
+      { x: 280, y: 160, scale: 3, speed: 8 },
+      { x: 180, y: 260, scale: 5, speed: 15 }
+    ];
+
+    // 시작 화면 프리뷰 캐릭터 렌더링 (첫 모자부터 머리 위에 깊숙이 겹침)
+    function renderPreviewDuck() {
+      if (!previewCtx) return;
+      previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+      previewCtx.imageSmoothingEnabled = false;
+      const duckBottomY = 122;
+      const pSize = 3;
+      const duckH = DUCK_BASE_GRID.length * pSize;
+      const firstCapOverlap = 4 * pSize;
+      const capStep = 3 * pSize;
+      drawDuckCharacter(previewCtx, 64, duckBottomY, pSize, false, 0);
+      drawPixelCap(previewCtx, 64, duckBottomY - duckH + firstCapOverlap, pSize, CAP_COLORS[0], 1);
+      drawPixelCap(previewCtx, 64, duckBottomY - duckH + firstCapOverlap - capStep, pSize, CAP_COLORS[1], -1);
+    }
+
+    function resizeCanvas() {
+      const container = document.getElementById('canvas-container');
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      canvas.width = Math.max(200, Math.floor(rect.width));
+      canvas.height = Math.max(300, Math.floor(rect.height));
+      ctx.imageSmoothingEnabled = false;
+
+      player.y = canvas.height - 28;
+      if (player.x > canvas.width - 40) player.x = canvas.width - 40;
+      if (player.x < 40) player.x = 40;
+    }
+
+    function updateHeartsUI() {
+      hudHearts.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const active = i < lives;
+        const heart = document.createElement('span');
+        heart.className = 'inline-block text-base sm:text-lg leading-none';
+        heart.style.color = active ? '#f44755' : '#cbd5e1';
+        heart.style.textShadow = active ? '2px 2px 0px #23222b' : 'none';
+        heart.textContent = '♥';
+        hudHearts.appendChild(heart);
+      }
+    }
+
+    function updateHUD() {
+      hudScore.textContent = String(score).padStart(5, '0');
+      hudCaps.textContent = stackedCaps.length;
+      if (score > bestScore) {
+        bestScore = score;
+        try {
+          localStorage.setItem('duck_cap_best', String(bestScore));
+        } catch (e) {}
+      }
+      hudBest.textContent = String(bestScore).padStart(5, '0');
+    }
+
+    function toggleSoundUI() {
+      const isMuted = sfx.toggleMute();
+      btnSound.textContent = isMuted ? '🔇' : '🔊';
+    }
+
+    function startGame() {
+      sfx.init();
+      resizeCanvas();
+
+      score = 0;
+      combo = 0;
+      lives = 3;
+      stackedCaps = [];
+      fallingItems = [];
+      particles = [];
+      floatingEffects = [];
+      cameraY = 0;
+      spawnTimer = 0.35;
+      micSpawnTimer = 5.0;
+
+      keys.left = false;
+      keys.right = false;
+      pointerActive = false;
+      pointerTargetX = null;
+
+      player.x = canvas.width / 2;
+      player.y = canvas.height - 28;
+      player.vx = 0;
+      player.happyTimer = 0;
+
+      updateHUD();
+      updateHeartsUI();
+
+      startOverlay.classList.add('hidden');
+      gameoverOverlay.classList.add('hidden');
+      gameState = 'PLAYING';
+    }
+
+    function triggerGameOver() {
+      gameState = 'GAMEOVER';
+      sfx.playGameOver();
+
+      document.getElementById('final-score').textContent = score.toLocaleString() + ' PTS';
+      document.getElementById('final-caps').textContent = stackedCaps.length + ' 개';
+      document.getElementById('final-best').textContent = bestScore.toLocaleString() + ' PTS';
+
+      gameoverOverlay.classList.remove('hidden');
+    }
+
+    function spawnParticles(x, y, colors, count = 10) {
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+        const speed = 60 + Math.random() * 140;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 60,
+          size: PIXEL * (Math.random() > 0.5 ? 1.5 : 1),
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 0.55 + Math.random() * 0.25
+        });
+      }
+    }
+
+    function spawnFloatingText(x, y, text, color = '#ffca3a', size = 16) {
+      floatingEffects.push({
+        x,
+        y,
+        vy: -55,
+        text,
+        color,
+        size,
+        life: 1.1
+      });
+    }
+
+    function spawnCap() {
+      const margin = 44;
+      const x = margin + Math.random() * Math.max(40, canvas.width - margin * 2);
+      const colorScheme = CAP_COLORS[Math.floor(Math.random() * CAP_COLORS.length)];
+      const dir = Math.random() > 0.5 ? 1 : -1;
+      const baseSpeed = 190 + Math.min(stackedCaps.length * 6, 230);
+      fallingItems.push({
+        type: 'cap',
+        x,
+        y: -30 - cameraY,
+        vy: baseSpeed + Math.random() * 40,
+        colorScheme,
+        dir,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+
+    function spawnMic() {
+      const margin = 48;
+      const x = margin + Math.random() * Math.max(40, canvas.width - margin * 2);
+      fallingItems.push({
+        type: 'mic',
+        x,
+        y: -36 - cameraY,
+        vy: 230,
+        phase: 0
+      });
+    }
+
+    /**
+     * ============================================================================
+     * 4. 업데이트 루프
+     * ============================================================================
+     */
+    function update(dt) {
+      clouds.forEach(c => {
+        c.x += c.speed * dt;
+        if (c.x > canvas.width + 80) c.x = -80;
+      });
+
+      if (gameState !== 'PLAYING') return;
+
+      let moveDir = 0;
+      if (keys.left) moveDir -= 1;
+      if (keys.right) moveDir += 1;
+
+      if (pointerActive && pointerTargetX !== null) {
+        const diff = pointerTargetX - player.x;
+        if (Math.abs(diff) > 6) {
+          moveDir = diff > 0 ? 1 : -1;
+        }
+      }
+
+      const prevX = player.x;
+      if (moveDir !== 0) {
+        player.vx = moveDir * player.speed;
+        player.x += player.vx * dt;
+        player.dir = moveDir;
+
+        if (pointerActive && pointerTargetX !== null) {
+          if ((moveDir === 1 && player.x > pointerTargetX) || (moveDir === -1 && player.x < pointerTargetX)) {
+            player.x = pointerTargetX;
+          }
+        }
+
+        player.walkTimer += dt;
+        if (player.walkTimer > 0.09) {
+          player.walkTimer = 0;
+          player.walkFrame = player.walkFrame === 1 ? 2 : 1;
+        }
+      } else {
+        player.vx = 0;
+        player.walkFrame = 0;
+      }
+
+      const halfWidth = (26 * PIXEL) / 2;
+      player.x = Math.max(halfWidth + 6, Math.min(canvas.width - halfWidth - 6, player.x));
+      const actualDeltaX = player.x - prevX;
+
+      if (player.happyTimer > 0) {
+        player.happyTimer -= dt;
+        player.noteSpawnTimer -= dt;
+        if (player.noteSpawnTimer <= 0) {
+          player.noteSpawnTimer = 0.28;
+          const notes = ['♪', '♫', '♩', '♬'];
+          const noteChar = notes[Math.floor(Math.random() * notes.length)];
+          const offsetX = (Math.random() - 0.5) * 90;
+          spawnFloatingText(
+            player.x + offsetX,
+            player.y - DUCK_BASE_GRID.length * PIXEL - 10,
+            noteChar,
+            Math.random() > 0.5 ? '#ffca3a' : '#ff5765',
+            22
+          );
+        }
+      }
+
+      for (let i = 0; i < stackedCaps.length; i++) {
+        const cap = stackedCaps[i];
+        const factor = (i + 1) * 0.032;
+        cap.offsetX -= actualDeltaX * Math.min(factor, 0.55);
+        const springForce = -cap.offsetX * 16;
+        cap.wobbleVel = (cap.wobbleVel + springForce * dt) * 0.84;
+        cap.offsetX += cap.wobbleVel * dt;
+      }
+
+      const capStepHeight = 3 * PIXEL;
+      const duckHeight = DUCK_BASE_GRID.length * PIXEL;
+      const firstCapOverlap = 4 * PIXEL;
+      const stackTopY = player.y - duckHeight + firstCapOverlap - stackedCaps.length * capStepHeight;
+      const desiredTopScreenY = canvas.height * 0.44;
+      const targetCameraY = Math.max(0, desiredTopScreenY - stackTopY);
+      cameraY += (targetCameraY - cameraY) * Math.min(1, dt * 6);
+
+      spawnTimer -= dt;
+      if (spawnTimer <= 0) {
+        spawnCap();
+        spawnTimer = Math.max(0.68, 1.35 - stackedCaps.length * 0.018);
+      }
+
+      micSpawnTimer -= dt;
+      if (micSpawnTimer <= 0) {
+        spawnMic();
+        micSpawnTimer = 7.5 + Math.random() * 4.5;
+      }
+
+      const topCap = stackedCaps.length > 0 ? stackedCaps[stackedCaps.length - 1] : null;
+      const catchCenterX = player.x + (topCap ? topCap.offsetX : 0);
+      const catchTopY = stackTopY;
+
+      for (let i = fallingItems.length - 1; i >= 0; i--) {
+        const item = fallingItems[i];
+        item.y += item.vy * dt;
+        item.phase += dt * 5;
+
+        if (item.type === 'cap') {
+          const dx = Math.abs(item.x - catchCenterX);
+          const dy = Math.abs(item.y - catchTopY);
+
+          if (dx < 46 && dy < 24) {
+            combo += 1;
+            const gained = 100 + (combo - 1) * 20;
+            score += gained;
+            sfx.playCapStack(combo);
+
+            stackedCaps.push({
+              colorScheme: item.colorScheme,
+              dir: item.dir,
+              offsetX: (item.x - catchCenterX) * 0.28,
+              wobbleVel: 0
+            });
+
+            spawnParticles(item.x, catchTopY, [item.colorScheme.main, '#ffffff', '#ffca3a'], 8);
+            spawnFloatingText(
+              item.x,
+              catchTopY - 14,
+              combo > 1 ? `+${gained} (${combo}COMBO!)` : `+${gained}`,
+              '#ffffff',
+              15
+            );
+
+            updateHUD();
+            fallingItems.splice(i, 1);
+            continue;
+          }
+
+          if (item.y > player.y + 30) {
+            combo = 0;
+            lives -= 1;
+            sfx.playMiss();
+            updateHeartsUI();
+            spawnParticles(item.x, player.y, ['#f44755', '#23222b'], 10);
+            spawnFloatingText(item.x, player.y - 20, 'MISS!', '#f44755', 16);
+            fallingItems.splice(i, 1);
+
+            if (lives <= 0) {
+              triggerGameOver();
+              return;
+            }
+          }
+        } else if (item.type === 'mic') {
+          const withinX = Math.abs(item.x - player.x) < 54;
+          const withinY = item.y >= catchTopY - 15 && item.y <= player.y;
+
+          if (withinX && withinY) {
+            const bonus = 500;
+            score += bonus;
+            sfx.playMicBonus();
+
+            player.happyTimer = 2.5;
+            player.noteSpawnTimer = 0;
+
+            spawnParticles(item.x, item.y, ['#ffca3a', '#60a5fa', '#ff5765', '#ffffff'], 16);
+            spawnFloatingText(player.x, player.y - duckHeight - 28, `BONUS +${bonus}! ♪`, '#ffca3a', 18);
+
+            updateHUD();
+            fallingItems.splice(i, 1);
+            continue;
+          }
+
+          if (item.y > player.y + 40) {
+            fallingItems.splice(i, 1);
+          }
+        }
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy += 320 * dt;
+        p.life -= dt;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+
+      for (let i = floatingEffects.length - 1; i >= 0; i--) {
+        const f = floatingEffects[i];
+        f.y += f.vy * dt;
+        f.life -= dt;
+        if (f.life <= 0) floatingEffects.splice(i, 1);
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 5. 렌더링 루프
+     * ============================================================================
+     */
+    function drawPixelCloud(x, y, s) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x, y, s * 10, s * 3);
+      ctx.fillRect(x + s * 2, y - s * 2, s * 6, s * 2);
+      ctx.fillRect(x + s * 3, y - s * 3, s * 3, s);
+      ctx.fillStyle = '#dbeafe';
+      ctx.fillRect(x, y + s * 2, s * 10, s);
+    }
+
+    function render() {
+      const w = canvas.width;
+      const h = canvas.height;
+
+      const heightProgress = Math.min(stackedCaps.length / 35, 1);
+      if (heightProgress < 0.5) {
+        ctx.fillStyle = '#8ecae6';
+      } else if (heightProgress < 0.85) {
+        ctx.fillStyle = '#5e81ac';
+      } else {
+        ctx.fillStyle = '#24293e';
+      }
+      ctx.fillRect(0, 0, w, h);
+
+      clouds.forEach(c => {
+        const drawY = ((c.y + cameraY * 0.35) % (h + 60));
+        drawPixelCloud(Math.round(c.x), Math.round(drawY), c.scale);
+      });
+
+      if (stackedCaps.length >= 12) {
+        ctx.fillStyle = '#fff3b0';
+        for (let s = 0; s < 14; s++) {
+          const sx = (s * 73) % w;
+          const sy = ((s * 97 + cameraY * 0.2) % (h - 80));
+          ctx.fillRect(sx, sy, 4, 4);
+        }
+      }
+
+      ctx.save();
+      ctx.translate(0, Math.round(cameraY));
+
+      // 잔디 & 벽돌 바닥
+      const floorTop = player.y - 2;
+      ctx.fillStyle = '#23222b';
+      ctx.fillRect(0, floorTop, w, 4);
+      ctx.fillStyle = '#52b788';
+      ctx.fillRect(0, floorTop + 4, w, 10);
+      ctx.fillStyle = '#40916c';
+      for (let gx = 0; gx < w; gx += 16) {
+        ctx.fillRect(gx, floorTop + 10, 8, 4);
+      }
+      ctx.fillStyle = '#bc6c25';
+      ctx.fillRect(0, floorTop + 14, w, 30);
+      ctx.fillStyle = '#dda15e';
+      for (let bx = 0; bx < w; bx += 24) {
+        ctx.fillRect(bx + 2, floorTop + 16, 18, 8);
+      }
+
+      // 오리 근위병 캐릭터
+      const isHappy = player.happyTimer > 0;
+      drawDuckCharacter(ctx, player.x, player.y, PIXEL, isHappy, player.walkFrame);
+
+      // 포개져 쌓인 캡모자들
+      const duckHeight = DUCK_BASE_GRID.length * PIXEL;
+      const capStepHeight = 3 * PIXEL;
+      const firstCapOverlap = 4 * PIXEL;
+      let currentStackY = player.y - duckHeight + firstCapOverlap;
+
+      for (let i = 0; i < stackedCaps.length; i++) {
+        const cap = stackedCaps[i];
+        const capX = player.x + cap.offsetX;
+        drawPixelCap(ctx, capX, currentStackY, PIXEL, cap.colorScheme, cap.dir);
+        currentStackY -= capStepHeight;
+      }
+
+      // 떨어지는 아이템
+      fallingItems.forEach(item => {
+        if (item.type === 'cap') {
+          const swayX = Math.sin(item.phase) * 4;
+          drawPixelCap(ctx, item.x + swayX, item.y, PIXEL, item.colorScheme, item.dir);
+        } else if (item.type === 'mic') {
+          const pulse = Math.sin(item.phase * 2) > 0;
+          ctx.fillStyle = pulse ? '#ffca3a' : '#ffffff';
+          ctx.fillRect(item.x - 24, item.y - 12, 4, 4);
+          ctx.fillRect(item.x + 20, item.y + 8, 4, 4);
+          if (pulse) {
+            ctx.fillRect(item.x + 18, item.y - 18, 4, 4);
+            ctx.fillRect(item.x - 20, item.y + 14, 4, 4);
+          }
+          drawPixelMic(ctx, item.x, item.y, PIXEL);
+        }
+      });
+
+      // 파티클
+      particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(Math.round(p.x), Math.round(p.y), Math.round(p.size), Math.round(p.size));
+      });
+
+      // 플로팅 텍스트
+      floatingEffects.forEach(f => {
+        ctx.font = `bold ${f.size}px "DungGeunMo", "Press Start 2P", monospace`;
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#23222b';
+        ctx.fillText(f.text, Math.round(f.x) + 2, Math.round(f.y) + 2);
+        ctx.fillStyle = f.color;
+        ctx.fillText(f.text, Math.round(f.x), Math.round(f.y));
+      });
+
+      ctx.restore();
+
+      if (gameState === 'PLAYING' && combo >= 2) {
+        ctx.font = 'bold 14px "DungGeunMo", "Press Start 2P", monospace';
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#23222b';
+        ctx.fillText(`${combo} COMBO!`, 14, 26);
+        ctx.fillStyle = '#ffca3a';
+        ctx.fillText(`${combo} COMBO!`, 12, 24);
+      }
+    }
+
+    function gameLoop(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      update(dt);
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    /**
+     * ============================================================================
+     * 6. 이벤트 리스너 연결
+     * ============================================================================
+     */
+    window.addEventListener('resize', resizeCanvas);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        keys.left = true;
+        pointerActive = false;
+      }
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        keys.right = true;
+        pointerActive = false;
+      }
+      if ((e.key === ' ' || e.key === 'Enter') && gameState !== 'PLAYING') {
+        startGame();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+    });
+
+    function updatePointerPosition(clientX) {
+      const rect = canvas.getBoundingClientRect();
+      pointerTargetX = clientX - rect.left;
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if (gameState !== 'PLAYING') return;
+      pointerActive = true;
+      updatePointerPosition(e.clientX);
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (gameState !== 'PLAYING') return;
+      if (e.touches && e.touches.length > 0) {
+        pointerActive = true;
+        updatePointerPosition(e.touches[0].clientX);
+      }
+    }, { passive: true });
+
+    window.addEventListener('pointermove', (e) => {
+      if (pointerActive && gameState === 'PLAYING') {
+        updatePointerPosition(e.clientX);
+      }
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (pointerActive && gameState === 'PLAYING' && e.touches && e.touches.length > 0) {
+        updatePointerPosition(e.touches[0].clientX);
+      }
+    }, { passive: true });
+
+    window.addEventListener('pointerup', () => { pointerActive = false; });
+    window.addEventListener('touchend', () => { pointerActive = false; });
+
+    function bindHoldButton(btn, dirKey) {
+      const press = (e) => {
+        if (e.cancelable) e.preventDefault();
+        keys[dirKey] = true;
+        pointerActive = false;
+      };
+      const release = (e) => {
+        if (e.cancelable) e.preventDefault();
+        keys[dirKey] = false;
+      };
+      btn.addEventListener('pointerdown', press);
+      btn.addEventListener('pointerup', release);
+      btn.addEventListener('pointerleave', release);
+      btn.addEventListener('pointercancel', release);
+      btn.addEventListener('touchstart', press, { passive: false });
+      btn.addEventListener('touchend', release, { passive: false });
+      btn.addEventListener('touchcancel', release, { passive: false });
+    }
+    bindHoldButton(btnLeft, 'left');
+    bindHoldButton(btnRight, 'right');
+
+    // 버튼 클릭 및 모바일 터치 이벤트 연결
+    btnSound.addEventListener('click', toggleSoundUI);
+    btnStart.addEventListener('click', startGame);
+    btnRestart.addEventListener('click', startGame);
+
+    btnStart.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      startGame();
+    }, { passive: false });
+
+    btnRestart.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      startGame();
+    }, { passive: false });
+
+    // 초기 렌더링 및 게임 루프 시작
+    resizeCanvas();
+    updateHeartsUI();
+    renderPreviewDuck();
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
