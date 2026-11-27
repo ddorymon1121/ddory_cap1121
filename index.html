@@ -73,6 +73,7 @@
       justify-content: center;
       text-align: center;
       touch-action: manipulation;
+      text-decoration: none;
     }
 
     .pixel-btn:active {
@@ -96,6 +97,18 @@
       background-color: #4cc9f0;
       color: #14141f;
       box-shadow: inset -4px -4px 0px #2b93b5, inset 4px 4px 0px #90e0ef, 0 4px 0px var(--pixel-border);
+    }
+
+    .pixel-btn-dark {
+      background-color: #23222b;
+      color: #ffffff;
+      box-shadow: inset -4px -4px 0px #0f0e14, inset 4px 4px 0px #454354, 0 4px 0px #000000;
+    }
+
+    .pixel-btn-white {
+      background-color: #ffffff;
+      color: #23222b;
+      box-shadow: inset -4px -4px 0px #dcd8ce, inset 4px 4px 0px #ffffff, 0 4px 0px var(--pixel-border);
     }
 
     #game-wrapper {
@@ -163,7 +176,7 @@
       <div class="flex items-center gap-2">
         <div id="hud-hearts" class="flex items-center gap-1" aria-label="남은 목숨"></div>
         <button id="btn-sound" type="button" class="pixel-btn pixel-btn-gold w-9 h-9 text-sm" title="효과음 켜기/끄기">
-          📢
+          🔊
         </button>
       </div>
     </header>
@@ -190,7 +203,7 @@
 
           <div class="text-xs sm:text-sm text-gray-700 space-y-1.5 bg-[#f4f1ea] border-2 border-[#23222b] p-3 w-full text-left">
             <p>🧢 떨어지는 <b>캡모자</b>를 머리 위에 쌓으세요!</p>
-            <p>🎤 반짝이는 <b>마이크</b>를 잡으면 보너스 <span class="text-[#f44755] font-bold">&gt;.&lt; ♪</span></p>
+            <p>🎤 반짝이는 <b>마이크</b>를 잡으면 보너스 <span class="text-[#f44755] font-bold">^ ^ ♪</span></p>
             <p>⌨️ 조작: <b>◀ / ▶ 버튼</b> 또는 화면 터치/드래그</p>
           </div>
 
@@ -202,13 +215,13 @@
 
       <!-- 게임 오버 오버레이 -->
       <div id="gameover-overlay" class="hidden absolute inset-0 bg-[#181824]/85 flex flex-col items-center justify-center p-4 z-30">
-        <div class="pixel-box p-5 sm:p-6 max-w-[350px] w-full flex flex-col items-center text-center gap-4">
+        <div class="pixel-box p-4 sm:p-5 max-w-[350px] w-full flex flex-col items-center text-center gap-3">
           <div class="bg-[#f44755] text-white border-2 border-[#23222b] px-3 py-1 text-sm font-bold">
             GAME OVER
           </div>
-          <h2 class="text-2xl font-bold text-[#23222b]">모자 탑이 무너졌어요!</h2>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#23222b]">모자 탑이 무너졌어요!</h2>
 
-          <div class="w-full bg-[#f4f1ea] border-4 border-[#23222b] p-3 space-y-2 text-sm">
+          <div class="w-full bg-[#f4f1ea] border-4 border-[#23222b] p-3 space-y-1.5 text-sm">
             <div class="flex justify-between items-center">
               <span class="text-gray-600">최종 점수</span>
               <span id="final-score" class="text-lg font-bold text-[#f44755]">0</span>
@@ -217,15 +230,27 @@
               <span class="text-gray-600">쌓은 캡모자</span>
               <span id="final-caps" class="text-lg font-bold text-[#3b82f6]">0 개</span>
             </div>
-            <div class="flex justify-between items-center border-t-2 border-dashed border-gray-400 pt-2">
+            <div class="flex justify-between items-center border-t-2 border-dashed border-gray-400 pt-1.5">
               <span class="text-gray-600">최고 기록</span>
               <span id="final-best" class="text-base font-bold text-[#d49b17]">0</span>
             </div>
           </div>
 
-          <button id="btn-restart" type="button" class="pixel-btn pixel-btn-gold w-full py-3.5 text-lg font-bold">
+          <button id="btn-restart" type="button" class="pixel-btn pixel-btn-gold w-full py-3 text-base sm:text-lg font-bold">
             ↻ 다시 하기
           </button>
+
+          <!-- X 공유 및 제작자 팔로우 버튼 영역 -->
+          <div class="w-full grid grid-cols-1 gap-2 pt-1 border-t-2 border-dashed border-gray-300">
+            <a id="btn-share-x" href="https://x.com/intent/tweet" target="_blank" rel="noopener noreferrer" class="pixel-btn pixel-btn-dark w-full py-2.5 text-xs sm:text-sm font-bold gap-1.5">
+              <span>𝕏</span>
+              <span>X에 공유하기</span>
+            </a>
+            <a id="btn-follow-x" href="https://x.com/dorydory_kk" target="_blank" rel="noopener noreferrer" class="pixel-btn pixel-btn-white w-full py-2.5 text-xs sm:text-sm font-bold gap-1.5">
+              <span>𝕏</span>
+              <span>제작자 팔로우하기 @dorydory_kk</span>
+            </a>
+          </div>
         </div>
       </div>
     </main>
@@ -370,33 +395,34 @@
       "..KHHHHHHHHHHHHHHHHHHHHK..",
       "..KHHHHHHHHHHHHHHHHHHHHK..",
       "...CWWWWWWWWWWWWWWWWWWC...",
-      "...CWWEEEEWWWWWWEEEEWWC...", // 14: 반타원 윗눈꺼풀
-      "...CWEWEEWEWWWWEWEEWEWC...", // 15: 반타원 눈동자 + 흰자위
-      "...CWEEWWEEWWWWEEWWEEWC...", // 16: 둥근 반타원 하단 곡선
-      "...CWWEEEEWWWWWWEEEEWWC...", // 17: 반타원 밑단
-      "...CWWWWWWWWBBWWWWWWCWC...", // 18: 부리 윗부분
-      "...CWWWWWWBBBBBBWWCWWWC...", // 19: 볼 점 1
-      "....CWWWBBBBBBBBBBWCWWC...", // 20: 부리 + 볼 점 2, 3
-      "....CWWWOOOOOOOOOOWWWWC...", // 21: 부리 가운데 가로선
-      ".....CWWBBBBBBBBBBWWWC....", // 22: 부리 아랫부분
-      "....CYYCMMMMMMMMMMCYYC....", // 23: 노란 견장 + 빨간 옷 깃
-      "..GGGYYCRRRRRRRRRRCYYGGG..", // 24: 연보라 테두리 날개 + 제복
-      ".GWWWWWSRRRRYYRRRRWWWWWWG.", // 25: 날개 + 첫째 단추
-      "GWWWWWWWRRRRRRRRRRWWWWWWWG", // 26: 날개
-      "GWWWWWWWRRRRYYRRRRWWWWWWWG", // 27: 날개 + 둘째 단추
-      ".GWWSSWSRRRRRRRRRRSWSSWWG.", // 28: 날개 아랫부분
-      "..GGGGG.MRRRYYRRRM.GGGGG..", // 29: 날개 하단 테두리 + 셋째 단추
-      "........MRRRRRRRRM........", // 30: 제복 밑단
-      ".........MMMMMMMM.........", // 31: 제복 어두운 붉은색 밑단
-      ".........OBBO.OBBO........", // 32: 다리
-      "........OBBBO.OBBBO.......", // 33: 발
-      ".........OOO...OOO........"  // 34: 발바닥 테두리
+      "...CWWEEEEWWWWWWEEEEWWC...", // 16: 반타원 윗눈꺼풀
+      "...CWEWEEWEWWWWEWEEWEWC...", // 17: 반타원 눈동자 + 흰자위
+      "...CWEEWWEEWWWWEEWWEEWC...", // 18: 둥근 반타원 하단 곡선
+      "...CWWEEEEWWWWWWEEEEWWC...", // 19: 반타원 밑단
+      "...CWWWWWWWWBBWWWWWWCWC...", // 20: 부리 윗부분
+      "...CWWWWWWBBBBBBWWCWWWC...", // 21: 볼 점 1
+      "....CWWWBBBBBBBBBBWCWWC...", // 22: 부리 + 볼 점 2, 3
+      "....CWWWOOOOOOOOOOWWWWC...", // 23: 부리 가운데 가로선
+      ".....CWWBBBBBBBBBBWWWC....", // 24: 부리 아랫부분
+      "....CYYCMMMMMMMMMMCYYC....", // 25: 노란 견장 + 빨간 옷 깃
+      "..GGGYYCRRRRRRRRRRCYYGGG..", // 26: 연보라 테두리 날개 + 제복
+      ".GWWWWWSRRRRYYRRRRWWWWWWG.", // 27: 날개 + 첫째 단추
+      "GWWWWWWWRRRRRRRRRRWWWWWWWG", // 28: 날개
+      "GWWWWWWWRRRRYYRRRRWWWWWWWG", // 29: 날개 + 둘째 단추
+      ".GWWSSWSRRRRRRRRRRSWSSWWG.", // 30: 날개 아랫부분
+      "..GGGGG.MRRRYYRRRM.GGGGG..", // 31: 날개 하단 테두리 + 셋째 단추
+      "........MRRRRRRRRM........", // 32: 제복 밑단
+      ".........MMMMMMMM.........", // 33: 제복 어두운 붉은색 밑단
+      ".........OBBO.OBBO........", // 34: 다리
+      "........OBBBO.OBBBO.......", // 35: 발
+      ".........OOO...OOO........"  // 36: 발바닥 테두리
     ];
 
+    // 보너스 마이크 획득 시 ^ ^ 웃는 표정 패치
     const HAPPY_FACE_PATCH = {
       16: "...CWWWEEWWWWWWWWEEWWWC...",
-      17: "...CWWWWWEEWWWWEEWWWWWC...",
-      18: "...CWWWEEWWWWWWWWEEWWWC...",
+      17: "...CWWEWWEEWWWWEEWWEWWC...",
+      18: "...CEWWWWWWEWWEWWWWWMEC...".replace('M', 'W'),
       19: "...CWWWWWWWWWWWWWWWWWWC..."
     };
 
@@ -418,7 +444,7 @@
           if (!color) continue;
 
           let drawY = startY + r * pixelSize;
-          if (r >= 32 && walkFrame !== 0) {
+          if (r >= 34 && walkFrame !== 0) {
             const isLeftFoot = c < cols / 2;
             if ((walkFrame === 1 && isLeftFoot) || (walkFrame === 2 && !isLeftFoot)) {
               drawY -= pixelSize;
@@ -529,6 +555,7 @@
     const gameoverOverlay = document.getElementById('gameover-overlay');
     const btnStart = document.getElementById('btn-start');
     const btnRestart = document.getElementById('btn-restart');
+    const btnShareX = document.getElementById('btn-share-x');
     const btnLeft = document.getElementById('btn-left');
     const btnRight = document.getElementById('btn-right');
 
@@ -675,6 +702,11 @@
       document.getElementById('final-score').textContent = score.toLocaleString() + ' PTS';
       document.getElementById('final-caps').textContent = stackedCaps.length + ' 개';
       document.getElementById('final-best').textContent = bestScore.toLocaleString() + ' PTS';
+
+      // X 공유하기 링크에 현재 점수와 모자 개수, 페이지 URL 반영
+      const pageUrl = window.location.href;
+      const shareText = `🧢 또리 캡모자 쌓기에서 캡모자 ${stackedCaps.length}개 쌓고 ${score.toLocaleString()}점 달성! (제작: @dorydory_kk)`;
+      btnShareX.href = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
 
       gameoverOverlay.classList.remove('hidden');
     }
@@ -1128,44 +1160,4 @@
     function bindHoldButton(btn, dirKey) {
       const press = (e) => {
         if (e.cancelable) e.preventDefault();
-        keys[dirKey] = true;
-        pointerActive = false;
-      };
-      const release = (e) => {
-        if (e.cancelable) e.preventDefault();
-        keys[dirKey] = false;
-      };
-      btn.addEventListener('pointerdown', press);
-      btn.addEventListener('pointerup', release);
-      btn.addEventListener('pointerleave', release);
-      btn.addEventListener('pointercancel', release);
-      btn.addEventListener('touchstart', press, { passive: false });
-      btn.addEventListener('touchend', release, { passive: false });
-      btn.addEventListener('touchcancel', release, { passive: false });
-    }
-    bindHoldButton(btnLeft, 'left');
-    bindHoldButton(btnRight, 'right');
-
-    // 버튼 클릭 및 모바일 터치 이벤트 연결
-    btnSound.addEventListener('click', toggleSoundUI);
-    btnStart.addEventListener('click', startGame);
-    btnRestart.addEventListener('click', startGame);
-
-    btnStart.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      startGame();
-    }, { passive: false });
-
-    btnRestart.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      startGame();
-    }, { passive: false });
-
-    // 초기 렌더링 및 게임 루프 시작
-    resizeCanvas();
-    updateHeartsUI();
-    renderPreviewDuck();
-    requestAnimationFrame(gameLoop);
-  </script>
-</body>
-</html>
+        keys
