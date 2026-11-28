@@ -842,7 +842,7 @@
         const springForce = -cap.offsetX * 4.5;
         cap.wobbleVel = (cap.wobbleVel + springForce * dt) * 0.72;
         cap.offsetX += cap.wobbleVel * dt;
-        cap.offsetX = Math.max(-44, Math.min(44, cap.offsetX));
+        cap.offsetX = Math.max(-56, Math.min(56, cap.offsetX));
         }
 
       const capStepHeight = 3 * PIXEL;
@@ -875,12 +875,11 @@
         item.phase += dt * 5;
 
         if (item.type === 'cap') {
-          const dxTop = Math.abs(item.x - catchCenterX);
-          const dxBody = Math.abs(item.x - player.x);
-          const dx = Math.min(dxTop, dxBody);
-          const dy = Math.abs(item.y - catchTopY);
+      const dx = Math.abs(item.x - catchCenterX);
+      const dy = Math.abs(item.y - catchTopY);
 
-          if (dx < 42 && dy < 22) {
+        if (dx < 36 && dy < 18) {
+
             combo += 1;
             const gained = 100 + (combo - 1) * 20;
             score += gained;
@@ -1047,7 +1046,7 @@
       // 떨어지는 아이템
       fallingItems.forEach(item => {
         if (item.type === 'cap') {
-          const swayX = Math.sin(item.phase) * 4;
+          const swayX = Math.sin(item.phase) * 14;
           drawPixelCap(ctx, item.x + swayX, item.y, PIXEL, item.colorScheme, item.dir);
         } else if (item.type === 'mic') {
           const pulse = Math.sin(item.phase * 2) > 0;
