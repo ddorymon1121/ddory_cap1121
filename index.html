@@ -839,7 +839,7 @@
         const cap = stackedCaps[i];
         const factor = (i + 1) * 0.026;
         cap.offsetX -= actualDeltaX * Math.min(factor, 0.35);
-        const springForce = -cap.offsetX * 4.5;
+        const springForce = -cap.offsetX * 0.8;
         cap.wobbleVel = (cap.wobbleVel + springForce * dt) * 0.72;
         cap.offsetX += cap.wobbleVel * dt;
         cap.offsetX = Math.max(-56, Math.min(56, cap.offsetX));
