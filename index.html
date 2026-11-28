@@ -837,7 +837,7 @@
 
       for (let i = 0; i < stackedCaps.length; i++) {
         const cap = stackedCaps[i];
-        const factor = (i + 1) * 0.018;
+        const factor = (i + 1) * 0.026;
         cap.offsetX -= actualDeltaX * Math.min(factor, 0.35);
         const springForce = -cap.offsetX * 4.5;
         cap.wobbleVel = (cap.wobbleVel + springForce * dt) * 0.72;
@@ -880,7 +880,7 @@
           const dx = Math.min(dxTop, dxBody);
           const dy = Math.abs(item.y - catchTopY);
 
-          if (dx < 48 && dy < 28) {
+          if (dx < 42 && dy < 22) {
             combo += 1;
             const gained = 100 + (combo - 1) * 20;
             score += gained;
