@@ -417,8 +417,8 @@
     const HAPPY_FACE_PATCH = {
       16: "...CWWWEEWWWWWWWWEEWWWC...",
       17: "...CWWEWWEEWWWWEEWWEWWC...",
-      18: "...CWWWWWWWEWWEWWWWWMEC...".replace('M', 'W'),
-      19: "...CWWWWWWWWWWWWWWWWWWC..."
+      18: "...CWWWWWWWEWWEWWWWWMEC...",
+      19: "...CWWWWWWWWWWWWWWWWWWC...",
     };
 
     function drawDuckCharacter(ctx, centerX, bottomY, pixelSize, isHappy = false, walkFrame = 0) {
@@ -881,8 +881,6 @@
           const dy = Math.abs(item.y - catchTopY);
 
           if (dx < 58 && dy < 38) {
-
-          if (dx < 46 && dy < 24) {
             combo += 1;
             const gained = 100 + (combo - 1) * 20;
             score += gained;
@@ -894,6 +892,7 @@
               offsetX: (item.x - catchCenterX) * 0.28,
               wobbleVel: 0
             });
+
 
             spawnParticles(item.x, catchTopY, [item.colorScheme.main, '#ffffff', '#ffca3a'], 8);
             spawnFloatingText(
