@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>또리 캡모자 쌓기!</title>
-  <!-- 픽셀 폰트 로드 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -37,7 +36,7 @@
       margin: 0;
       padding: 0;
       background-color: #181824;
-      background-image: 
+      background-image:
         radial-gradient(#2c2c40 2px, transparent 2px),
         radial-gradient(#2c2c40 2px, #181824 2px);
       background-size: 32px 32px;
@@ -55,7 +54,7 @@
     .pixel-box {
       background-color: var(--pixel-panel);
       border: 4px solid var(--pixel-border);
-      box-shadow: 
+      box-shadow:
         inset -4px -4px 0px #dedad0,
         inset 4px 4px 0px #ffffff,
         0 6px 0px rgba(0, 0, 0, 0.35);
@@ -73,6 +72,7 @@
       justify-content: center;
       text-align: center;
       touch-action: manipulation;
+      text-decoration: none;
     }
 
     .pixel-btn:active {
@@ -97,16 +97,19 @@
       color: #14141f;
       box-shadow: inset -4px -4px 0px #2b93b5, inset 4px 4px 0px #90e0ef, 0 4px 0px var(--pixel-border);
     }
+
     .pixel-btn-green {
       background-color: #34d399;
       color: #14141f;
       box-shadow: inset -4px -4px 0px #059669, inset 4px 4px 0px #a7f3d0, 0 4px 0px var(--pixel-border);
     }
+
     .pixel-btn-dark {
       background-color: #23222b;
       color: #ffffff;
       box-shadow: inset -4px -4px 0px #0f0e14, inset 4px 4px 0px #454354, 0 4px 0px #000000;
     }
+
     #game-wrapper {
       width: 100%;
       max-width: 520px;
@@ -141,6 +144,7 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-4px); }
     }
+
     .animate-pixel-bounce {
       animation: pixelBounce 0.9s steps(2) infinite;
     }
@@ -149,7 +153,6 @@
 <body>
 
   <div id="game-wrapper">
-    <!-- 상단 HUD -->
     <header class="pixel-box px-3 py-2 flex items-center justify-between gap-2 shrink-0">
       <div class="flex flex-col">
         <span class="text-[11px] text-gray-500 leading-tight">SCORE</span>
@@ -172,16 +175,14 @@
       <div class="flex items-center gap-2">
         <div id="hud-hearts" class="flex items-center gap-1" aria-label="남은 목숨"></div>
         <button id="btn-sound" type="button" class="pixel-btn pixel-btn-gold w-9 h-9 text-sm" title="효과음 켜기/끄기">
-          📢
+          🔊
         </button>
       </div>
     </header>
 
-    <!-- 게임 캔버스 영역 -->
     <main id="canvas-container">
       <canvas id="gameCanvas"></canvas>
 
-      <!-- 시작 화면 오버레이 -->
       <div id="start-overlay" class="absolute inset-0 bg-[#181824]/80 flex flex-col items-center justify-center p-4 z-30">
         <div class="pixel-box p-4 sm:p-6 max-w-[360px] w-full flex flex-col items-center text-center gap-3 sm:gap-4">
           <div class="bg-[#23222b] text-[#ffca3a] px-3 py-1 text-xs tracking-widest">
@@ -192,15 +193,14 @@
             <span class="text-[#f44755]">캡모자 쌓기!</span>
           </h1>
 
-          <!-- 캐릭터 픽셀 프리뷰 -->
           <div class="bg-[#e8f4f8] border-4 border-[#23222b] p-2 flex items-center justify-center">
             <canvas id="previewCanvas" width="128" height="128" class="w-28 h-28"></canvas>
           </div>
 
           <div class="text-xs sm:text-sm text-gray-700 space-y-1.5 bg-[#f4f1ea] border-2 border-[#23222b] p-3 w-full text-left">
-            <p>🧢 떨어지는 <b>캡모자</b>를 머리 위에 쌓으세요!</p>
-            <p>🎤 반짝이는 <b>마이크</b>를 잡으면 보너스 <span class="text-[#f44755] font-bold">&gt;.&lt; ♪</span></p>
-            <p>⌨️ 조작: <b>◀ / ▶ 버튼</b> 또는 화면 터치/드래그</p>
+            <p>🧢 정중앙에 맞추면 <b>PERFECT!</b> 보너스 + 흔들림 진정!</p>
+            <p>👑 <b>황금 모자</b>는 보너스 점수 + 균형 복구, <b>돌풍 모자</b> 주의!</p>
+            <p>🎤 반짝이는 <b>마이크</b>를 잡으면 보너스 <span class="text-[#f44755] font-bold">^ ^ ♪</span></p>
           </div>
 
           <button id="btn-start" type="button" class="pixel-btn pixel-btn-red w-full py-3.5 text-lg sm:text-xl font-bold animate-pixel-bounce">
@@ -209,9 +209,8 @@
         </div>
       </div>
 
-      <!-- 게임 오버 오버레이 -->
       <div id="gameover-overlay" class="hidden absolute inset-0 bg-[#181824]/85 flex flex-col items-center justify-center p-4 z-30">
-        <div class="pixel-box p-5 sm:p-6 max-w-[350px] w-full flex flex-col items-center text-center gap-4">
+        <div class="pixel-box p-5 sm:p-6 max-w-[350px] w-full flex flex-col items-center text-center gap-3">
           <div class="bg-[#f44755] text-white border-2 border-[#23222b] px-3 py-1 text-sm font-bold">
             GAME OVER
           </div>
@@ -235,23 +234,21 @@
           <button id="btn-restart" type="button" class="pixel-btn pixel-btn-gold w-full py-3.5 text-lg font-bold">
             ↻ 다시 하기
           </button>
-          <!-- 기존 X에 공유하기 한 줄짜리 <a>는 지우고 아래 1-2 코드로 교체 -->
+
           <div class="w-full grid grid-cols-2 gap-2 pt-1">
             <button id="btn-save-score" type="button" class="pixel-btn pixel-btn-green w-full py-2.5 text-xs font-bold">
               📷 점수 저장
             </button>
-            <a id="btn-share-x" href="https://x.com/intent/tweet" target="_blank" rel="noopener noreferrer" class="pixel-btn pixel-btn-dark w-full py-2.5 text-xs font-bold gap-1" style="text-decoration:none;">
+            <a id="btn-share-x" href="https://x.com/intent/tweet" target="_blank" rel="noopener noreferrer" class="pixel-btn pixel-btn-dark w-full py-2.5 text-xs font-bold gap-1">
               <span>𝕏</span>
-              <span>에 공유</span>
+              <span>X 공유</span>
             </a>
           </div>
           <p id="save-status" class="text-[11px] text-[#059669] min-h-[16px]"></p>
-
         </div>
       </div>
     </main>
 
-    <!-- 하단 컨트롤러 버튼 -->
     <footer class="grid grid-cols-2 gap-3 shrink-0">
       <button id="btn-left" type="button" class="pixel-btn pixel-btn-blue py-3.5 text-xl font-bold">
         ◀ LEFT
@@ -263,11 +260,6 @@
   </div>
 
   <script>
-    /**
-     * ============================================================================
-     * 1. 레트로 8비트 사운드 합성기 (Web Audio API)
-     * ============================================================================
-     */
     class PixelSound {
       constructor() {
         this.ctx = null;
@@ -278,16 +270,10 @@
         try {
           if (!this.ctx) {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (AudioCtx) {
-              this.ctx = new AudioCtx();
-            }
+            if (AudioCtx) this.ctx = new AudioCtx();
           }
-          if (this.ctx && this.ctx.state === 'suspended') {
-            this.ctx.resume();
-          }
-        } catch (err) {
-          // 오디오 초기화 실패 시에도 게임 진행 보장
-        }
+          if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        } catch (err) {}
       }
 
       toggleMute() {
@@ -304,37 +290,42 @@
           const now = this.ctx.currentTime + startTime;
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
-
           osc.type = type;
           osc.frequency.setValueAtTime(freq, now);
-          if (slideFreq) {
-            osc.frequency.exponentialRampToValueAtTime(slideFreq, now + duration);
-          }
-
+          if (slideFreq) osc.frequency.exponentialRampToValueAtTime(slideFreq, now + duration);
           gain.gain.setValueAtTime(vol, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
           osc.connect(gain);
           gain.connect(this.ctx.destination);
-
           osc.start(now);
           osc.stop(now + duration);
-        } catch (err) {
-          // 오디오 재생 예외 무시
+        } catch (err) {}
+      }
+
+      playCapStack(combo = 1, isPerfect = false) {
+        const pitchBoost = Math.min(combo * 22, 340);
+        if (isPerfect) {
+          this.playTone(587.33 + pitchBoost * 0.4, 'square', 0.08, 0, 0.15);
+          this.playTone(880.00 + pitchBoost * 0.4, 'triangle', 0.14, 0.06, 0.17);
+        } else {
+          this.playTone(320 + pitchBoost, 'square', 0.08, 0, 0.13, 520 + pitchBoost);
+          this.playTone(480 + pitchBoost, 'triangle', 0.11, 0.05, 0.15, 680 + pitchBoost);
         }
       }
 
-      playCapStack(combo = 1) {
-        const pitchBoost = Math.min(combo * 22, 340);
-        this.playTone(320 + pitchBoost, 'square', 0.08, 0, 0.13, 520 + pitchBoost);
-        this.playTone(480 + pitchBoost, 'triangle', 0.11, 0.05, 0.15, 680 + pitchBoost);
+      playGoldCap() {
+        const notes = [659.25, 880.00, 1174.66];
+        notes.forEach((f, idx) => this.playTone(f, 'square', 0.09, idx * 0.055, 0.14));
+      }
+
+      playMilestone() {
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((f, idx) => this.playTone(f, 'triangle', 0.11, idx * 0.07, 0.16));
       }
 
       playMicBonus() {
         const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
-        notes.forEach((freq, idx) => {
-          this.playTone(freq, 'square', 0.09, idx * 0.065, 0.13);
-        });
+        notes.forEach((freq, idx) => this.playTone(freq, 'square', 0.09, idx * 0.065, 0.13));
       }
 
       playMiss() {
@@ -343,35 +334,28 @@
 
       playGameOver() {
         const notes = [392.00, 349.23, 329.63, 261.63];
-        notes.forEach((freq, idx) => {
-          this.playTone(freq, 'square', 0.22, idx * 0.18, 0.15);
-        });
+        notes.forEach((freq, idx) => this.playTone(freq, 'square', 0.22, idx * 0.18, 0.15));
       }
     }
 
     const sfx = new PixelSound();
 
-    /**
-     * ============================================================================
-     * 2. 픽셀 오리 근위병 캐릭터 & 빅 사이즈 캡모자 도트 데이터
-     * ============================================================================
-     */
     const DUCK_PALETTE = {
       '.': null,
-      'K': '#26293a',   // 털모자 짙은 외곽선
-      'H': '#3f445c',   // 털모자 기본 슬레이트 블루
-      'D': '#32364a',   // 털모자 어두운 음영
-      'L': '#4f5570',   // 털모자 밝은 하이라이트
-      'W': '#ffffff',   // 하얀 깃털
-      'S': '#e6e4ee',   // 날개 연한 그림자
-      'G': '#c9c5d6',   // 날개 연보라빛 회색 외곽선
-      'C': '#4a2511',   // 머리/부리 짙은 갈색 외곽선
-      'B': '#ffb833',   // 주황/노란 부리 및 발
-      'O': '#9a3412',   // 부리 중앙선 & 발 테두리
-      'R': '#ef4444',   // 빨간 제복
-      'M': '#991b1b',   // 제복 어두운 붉은색 밑단 및 테두리
-      'Y': '#fde047',   // 노란 단추 & 견장
-      'E': '#3b1c0a'    // 눈동자 / 표정 짙은 갈색
+      'K': '#26293a',
+      'H': '#3f445c',
+      'D': '#32364a',
+      'L': '#4f5570',
+      'W': '#ffffff',
+      'S': '#e6e4ee',
+      'G': '#c9c5d6',
+      'C': '#4a2511',
+      'B': '#ffb833',
+      'O': '#9a3412',
+      'R': '#ef4444',
+      'M': '#991b1b',
+      'Y': '#fde047',
+      'E': '#3b1c0a'
     };
 
     const DUCK_BASE_GRID = [
@@ -391,34 +375,34 @@
       "..KHHHHHHHHHHHHHHHHHHHHK..",
       "..KHHHHHHHHHHHHHHHHHHHHK..",
       "...CWWWWWWWWWWWWWWWWWWC...",
-      "...CWWEEEEWWWWWWEEEEWWC...", // 14: 반타원 윗눈꺼풀
-      "...CWEWEEWEWWWWEWEEWEWC...", // 15: 반타원 눈동자 + 흰자위
-      "...CWEWEEWEWWWWEWEEWEWC...", // 16: 둥근 반타원 하단 곡선
-      "...CWWEEEEWWWWWWEEEEWWC...", // 17: 반타원 밑단
-      "...CWWWWWWWWBBWWWWWWCWC...", // 18: 부리 윗부분
-      "...CWWWWWWBBBBBBWWCWWWC...", // 19: 볼 점 1
-      "....CWWWBBBBBBBBBBWCWWC...", // 20: 부리 + 볼 점 2, 3
-      "....CWWWOOOOOOOOOOWWWWC...", // 21: 부리 가운데 가로선
-      ".....CWWBBBBBBBBBBWWWC....", // 22: 부리 아랫부분
-      "....CYYCMMMMMMMMMMCYYC....", // 23: 노란 견장 + 빨간 옷 깃
-      "..GGGYYCRRRRRRRRRRCYYGGG..", // 24: 연보라 테두리 날개 + 제복
-      ".GWWWWWSRRRRYYRRRRWWWWWWG.", // 25: 날개 + 첫째 단추
-      "GWWWWWWWRRRRRRRRRRWWWWWWWG", // 26: 날개
-      "GWWWWWWWRRRRYYRRRRWWWWWWWG", // 27: 날개 + 둘째 단추
-      ".GWWSSWSRRRRRRRRRRSWSSWWG.", // 28: 날개 아랫부분
-      "..GGGGG.MRRRYYRRRM.GGGGG..", // 29: 날개 하단 테두리 + 셋째 단추
-      "........MRRRRRRRRM........", // 30: 제복 밑단
-      ".........MMMMMMMM.........", // 31: 제복 어두운 붉은색 밑단
-      ".........OBBO.OBBO........", // 32: 다리
-      "........OBBBO.OBBBO.......", // 33: 발
-      ".........OOO...OOO........"  // 34: 발바닥 테두리
+      "...CWWEEEEWWWWWWEEEEWWC...",
+      "...CWEWEEWEWWWWEWEEWEWC...",
+      "...CWEEWWEEWWWWEEWWEEWC...",
+      "...CWWEEEEWWWWWWEEEEWWC...",
+      "...CWWWWWWWWBBWWWWWWCWC...",
+      "...CWWWWWWBBBBBBWWCWWWC...",
+      "....CWWWBBBBBBBBBBWCWWC...",
+      "....CWWWOOOOOOOOOOWWWWC...",
+      ".....CWWBBBBBBBBBBWWWC....",
+      "....CYYCMMMMMMMMMMCYYC....",
+      "..GGGYYCRRRRRRRRRRCYYGGG..",
+      ".GWWWWWSRRRRYYRRRRWWWWWWG.",
+      "GWWWWWWWRRRRRRRRRRWWWWWWWG",
+      "GWWWWWWWRRRRYYRRRRWWWWWWWG",
+      ".GWWSSWSRRRRRRRRRRSWSSWWG.",
+      "..GGGGG.MRRRYYRRRM.GGGGG..",
+      "........MRRRRRRRRM........",
+      ".........MMMMMMMM.........",
+      ".........OBBO.OBBO........",
+      "........OBBBO.OBBBO.......",
+      ".........OOO...OOO........"
     ];
 
     const HAPPY_FACE_PATCH = {
       16: "...CWWWEEWWWWWWWWEEWWWC...",
       17: "...CWWEWWEEWWWWEEWWEWWC...",
-      18: "...CWWWWWWWEWWEWWWWWMEC...",
-      19: "...CWWWWWWWWWWWWWWWWWWC...",
+      18: "...CEWWWWWWEWWEWWWWWWEWC...",
+      19: "...CWWWWWWWWWWWWWWWWWWC..."
     };
 
     function drawDuckCharacter(ctx, centerX, bottomY, pixelSize, isHappy = false, walkFrame = 0) {
@@ -429,9 +413,7 @@
 
       for (let r = 0; r < rows; r++) {
         let rowStr = DUCK_BASE_GRID[r];
-        if (isHappy && HAPPY_FACE_PATCH[r]) {
-          rowStr = HAPPY_FACE_PATCH[r];
-        }
+        if (isHappy && HAPPY_FACE_PATCH[r]) rowStr = HAPPY_FACE_PATCH[r];
 
         for (let c = 0; c < cols; c++) {
           const ch = rowStr[c];
@@ -439,7 +421,7 @@
           if (!color) continue;
 
           let drawY = startY + r * pixelSize;
-          if (r >= 32 && walkFrame !== 0) {
+          if (r >= 34 && walkFrame !== 0) {
             const isLeftFoot = c < cols / 2;
             if ((walkFrame === 1 && isLeftFoot) || (walkFrame === 2 && !isLeftFoot)) {
               drawY -= pixelSize;
@@ -461,6 +443,8 @@
       { main: '#ec4899', dark: '#be185d', visor: '#831843', logo: '#ffffff' },
       { main: '#06b6d4', dark: '#0e7490', visor: '#164e63', logo: '#ffffff' }
     ];
+
+    const GOLD_CAP_COLOR = { main: '#ffca3a', dark: '#d97706', visor: '#b45309', logo: '#ffffff' };
 
     function drawPixelCap(ctx, centerX, bottomY, pixelSize, colorScheme, dir = 1) {
       const capGridRight = [
@@ -530,12 +514,6 @@
         }
       }
     }
-
-    /**
-     * ============================================================================
-     * 3. 게임 상태 및 초기화
-     * ============================================================================
-     */
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const previewCanvas = document.getElementById('previewCanvas');
@@ -573,6 +551,8 @@
     let spawnTimer = 0;
     let micSpawnTimer = 0;
     let cameraY = 0;
+    let milestoneBanner = { text: '', timer: 0 };
+    let shootingStar = { active: false, x: 0, y: 0, vx: 0, vy: 0, timer: 4 };
 
     const keys = { left: false, right: false };
     let pointerActive = false;
@@ -582,7 +562,7 @@
       x: 240,
       y: 0,
       vx: 0,
-      speed: 420,
+      speed: 430,
       dir: 1,
       walkTimer: 0,
       walkFrame: 0,
@@ -601,7 +581,11 @@
       { x: 180, y: 260, scale: 5, speed: 15 }
     ];
 
-    // 시작 화면 프리뷰 캐릭터 렌더링 (첫 모자부터 머리 위에 깊숙이 겹침)
+    const birds = [
+      { x: 40, y: 130, speed: 34, flap: 0 },
+      { x: 260, y: 210, speed: 26, flap: 1.5 }
+    ];
+
     function renderPreviewDuck() {
       if (!previewCtx) return;
       previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
@@ -613,7 +597,7 @@
       const capStep = 3 * pSize;
       drawDuckCharacter(previewCtx, 64, duckBottomY, pSize, false, 0);
       drawPixelCap(previewCtx, 64, duckBottomY - duckH + firstCapOverlap, pSize, CAP_COLORS[0], 1);
-      drawPixelCap(previewCtx, 64, duckBottomY - duckH + firstCapOverlap - capStep, pSize, CAP_COLORS[1], -1);
+      drawPixelCap(previewCtx, 64, duckBottomY - duckH + firstCapOverlap - capStep, pSize, GOLD_CAP_COLOR, -1);
     }
 
     function resizeCanvas() {
@@ -672,7 +656,8 @@
       floatingEffects = [];
       cameraY = 0;
       spawnTimer = 0.35;
-      micSpawnTimer = 5.0;
+      micSpawnTimer = 5.5;
+      milestoneBanner = { text: '', timer: 0 };
 
       keys.left = false;
       keys.right = false;
@@ -683,6 +668,8 @@
       player.y = canvas.height - 28;
       player.vx = 0;
       player.happyTimer = 0;
+
+      if (saveStatus) saveStatus.textContent = '';
 
       updateHUD();
       updateHeartsUI();
@@ -700,12 +687,12 @@
       document.getElementById('final-caps').textContent = stackedCaps.length + ' 개';
       document.getElementById('final-best').textContent = bestScore.toLocaleString() + ' PTS';
 
-    const pageUrl = window.location.href;
-    const shareText = `🧢 또리 캡모자 쌓기에서 캡모자 ${stackedCaps.length}개 쌓고 ${score.toLocaleString()}점 달성!`;
-    if (btnShareX) {
-      btnShareX.href = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
-}
-    if (saveStatus) saveStatus.textContent = '';
+      const pageUrl = window.location.href;
+      const shareText = `🧢 또리 캡모자 쌓기에서 캡모자 ${stackedCaps.length}개 쌓고 ${score.toLocaleString()}점 달성!`;
+      if (btnShareX) {
+        btnShareX.href = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
+      }
+      if (saveStatus) saveStatus.textContent = '';
 
       gameoverOverlay.classList.remove('hidden');
     }
@@ -734,23 +721,41 @@
         text,
         color,
         size,
-        life: 1.1
+        life: 1.15
       });
     }
 
     function spawnCap() {
-      const margin = 44;
+      const margin = 48;
       const x = margin + Math.random() * Math.max(40, canvas.width - margin * 2);
-      const colorScheme = CAP_COLORS[Math.floor(Math.random() * CAP_COLORS.length)];
       const dir = Math.random() > 0.5 ? 1 : -1;
-      const baseSpeed = 190 + Math.min(stackedCaps.length * 6, 230);
+      const roll = Math.random();
+
+      let capKind = 'normal';
+      let colorScheme = CAP_COLORS[Math.floor(Math.random() * CAP_COLORS.length)];
+      let baseSpeed = 225 + Math.min(stackedCaps.length * 8, 270);
+      let swayAmp = 8;
+
+      if (roll < 0.12) {
+        capKind = 'gold';
+        colorScheme = GOLD_CAP_COLOR;
+        baseSpeed += 25;
+        swayAmp = 10;
+      } else if (roll < 0.28) {
+        capKind = 'wind';
+        baseSpeed += 40;
+        swayAmp = 22;
+      }
+
       fallingItems.push({
         type: 'cap',
+        capKind,
         x,
         y: -30 - cameraY,
-        vy: baseSpeed + Math.random() * 40,
+        vy: baseSpeed + Math.random() * 35,
         colorScheme,
         dir,
+        swayAmp,
         phase: Math.random() * Math.PI * 2
       });
     }
@@ -762,21 +767,46 @@
         type: 'mic',
         x,
         y: -36 - cameraY,
-        vy: 230,
+        vy: 245,
         phase: 0
       });
     }
 
-    /**
-     * ============================================================================
-     * 4. 업데이트 루프
-     * ============================================================================
-     */
     function update(dt) {
       clouds.forEach(c => {
         c.x += c.speed * dt;
         if (c.x > canvas.width + 80) c.x = -80;
       });
+
+      birds.forEach(b => {
+        b.x += b.speed * dt;
+        b.flap += dt * 8;
+        if (b.x > canvas.width + 40) b.x = -40;
+      });
+
+      if (milestoneBanner.timer > 0) {
+        milestoneBanner.timer -= dt;
+      }
+
+      if (stackedCaps.length >= 15) {
+        if (!shootingStar.active) {
+          shootingStar.timer -= dt;
+          if (shootingStar.timer <= 0) {
+            shootingStar.active = true;
+            shootingStar.x = Math.random() * (canvas.width * 0.7);
+            shootingStar.y = 30 + Math.random() * 100;
+            shootingStar.vx = 260;
+            shootingStar.vy = 140;
+            shootingStar.timer = 5 + Math.random() * 4;
+          }
+        } else {
+          shootingStar.x += shootingStar.vx * dt;
+          shootingStar.y += shootingStar.vy * dt;
+          if (shootingStar.x > canvas.width + 60 || shootingStar.y > canvas.height) {
+            shootingStar.active = false;
+          }
+        }
+      }
 
       if (gameState !== 'PLAYING') return;
 
@@ -786,9 +816,7 @@
 
       if (pointerActive && pointerTargetX !== null) {
         const diff = pointerTargetX - player.x;
-        if (Math.abs(diff) > 6) {
-          moveDir = diff > 0 ? 1 : -1;
-        }
+        if (Math.abs(diff) > 6) moveDir = diff > 0 ? 1 : -1;
       }
 
       const prevX = player.x;
@@ -837,13 +865,13 @@
 
       for (let i = 0; i < stackedCaps.length; i++) {
         const cap = stackedCaps[i];
-        const factor = (i + 1) * 0.026;
-        cap.offsetX -= actualDeltaX * Math.min(factor, 0.35);
-        const springForce = -cap.offsetX * 0.8;
-        cap.wobbleVel = (cap.wobbleVel + springForce * dt) * 0.72;
+        const factor = (i + 1) * 0.022;
+        cap.offsetX -= actualDeltaX * Math.min(factor, 0.42);
+        const springForce = -cap.offsetX * 1.1;
+        cap.wobbleVel = (cap.wobbleVel + springForce * dt) * 0.78;
         cap.offsetX += cap.wobbleVel * dt;
-        cap.offsetX = Math.max(-56, Math.min(56, cap.offsetX));
-        }
+        cap.offsetX = Math.max(-48, Math.min(48, cap.offsetX));
+      }
 
       const capStepHeight = 3 * PIXEL;
       const duckHeight = DUCK_BASE_GRID.length * PIXEL;
@@ -856,7 +884,7 @@
       spawnTimer -= dt;
       if (spawnTimer <= 0) {
         spawnCap();
-        spawnTimer = Math.max(0.68, 1.35 - stackedCaps.length * 0.018);
+        spawnTimer = Math.max(0.48, 1.12 - stackedCaps.length * 0.022);
       }
 
       micSpawnTimer -= dt;
@@ -872,35 +900,71 @@
       for (let i = fallingItems.length - 1; i >= 0; i--) {
         const item = fallingItems[i];
         item.y += item.vy * dt;
-        item.phase += dt * 5;
+        item.phase += dt * (item.capKind === 'wind' ? 7.5 : 5);
 
         if (item.type === 'cap') {
-      const dx = Math.abs(item.x - catchCenterX);
-      const dy = Math.abs(item.y - catchTopY);
+          const swayX = Math.sin(item.phase) * item.swayAmp;
+          const actualCapX = item.x + swayX;
+          const dx = Math.abs(actualCapX - catchCenterX);
+          const dy = Math.abs(item.y - catchTopY);
 
-        if (dx < 48 && dy < 28) {
+          if (dx < 38 && dy < 20) {
+            const isPerfect = dx <= 11;
+            const isGold = item.capKind === 'gold';
 
             combo += 1;
-            const gained = 100 + (combo - 1) * 20;
+            let gained = 100 + (combo - 1) * 20;
+            if (isPerfect) gained += 150;
+            if (isGold) gained += 300;
             score += gained;
-            sfx.playCapStack(combo);
+
+            if (isGold) {
+              sfx.playGoldCap();
+              stackedCaps.forEach(c => {
+                c.offsetX *= 0.35;
+                c.wobbleVel = 0;
+              });
+            } else {
+              sfx.playCapStack(combo, isPerfect);
+              if (isPerfect) {
+                stackedCaps.forEach(c => {
+                  c.offsetX *= 0.7;
+                  c.wobbleVel *= 0.5;
+                });
+              }
+            }
 
             stackedCaps.push({
               colorScheme: item.colorScheme,
               dir: item.dir,
-              offsetX: (item.x - catchCenterX) * 0.28,
+              offsetX: isPerfect ? 0 : (actualCapX - catchCenterX) * 0.55,
               wobbleVel: 0
             });
 
+            const newCount = stackedCaps.length;
+            if (newCount > 0 && newCount % 10 === 0) {
+              sfx.playMilestone();
+              milestoneBanner = { text: `★ ${newCount}층 돌파! ★`, timer: 2.2 };
+              spawnParticles(catchCenterX, catchTopY - 20, ['#ffca3a', '#f44755', '#34d399', '#60a5fa'], 20);
+            }
 
-            spawnParticles(item.x, catchTopY, [item.colorScheme.main, '#ffffff', '#ffca3a'], 8);
-            spawnFloatingText(
-              item.x,
-              catchTopY - 14,
-              combo > 1 ? `+${gained} (${combo}COMBO!)` : `+${gained}`,
-              '#ffffff',
-              15
-            );
+            const pColors = isGold
+              ? ['#ffca3a', '#ffffff', '#f59e0b']
+              : (isPerfect ? ['#ffca3a', '#34d399', '#ffffff'] : [item.colorScheme.main, '#ffffff']);
+            spawnParticles(actualCapX, catchTopY, pColors, isPerfect || isGold ? 14 : 8);
+
+            let label = `+${gained}`;
+            let labelColor = '#ffffff';
+            if (isGold) {
+              label = `GOLD! +${gained}`;
+              labelColor = '#ffca3a';
+            } else if (isPerfect) {
+              label = `PERFECT! +${gained}`;
+              labelColor = '#34d399';
+            } else if (combo > 1) {
+              label = `+${gained} (${combo}COMBO)`;
+            }
+            spawnFloatingText(actualCapX, catchTopY - 16, label, labelColor, isPerfect || isGold ? 17 : 15);
 
             updateHUD();
             fallingItems.splice(i, 1);
@@ -912,8 +976,8 @@
             lives -= 1;
             sfx.playMiss();
             updateHeartsUI();
-            spawnParticles(item.x, player.y, ['#f44755', '#23222b'], 10);
-            spawnFloatingText(item.x, player.y - 20, 'MISS!', '#f44755', 16);
+            spawnParticles(actualCapX, player.y, ['#f44755', '#23222b'], 10);
+            spawnFloatingText(actualCapX, player.y - 20, 'MISS!', '#f44755', 16);
             fallingItems.splice(i, 1);
 
             if (lives <= 0) {
@@ -941,9 +1005,7 @@
             continue;
           }
 
-          if (item.y > player.y + 40) {
-            fallingItems.splice(i, 1);
-          }
+          if (item.y > player.y + 40) fallingItems.splice(i, 1);
         }
       }
 
@@ -964,11 +1026,6 @@
       }
     }
 
-    /**
-     * ============================================================================
-     * 5. 렌더링 루프
-     * ============================================================================
-     */
     function drawPixelCloud(x, y, s) {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(x, y, s * 10, s * 3);
@@ -978,59 +1035,80 @@
       ctx.fillRect(x, y + s * 2, s * 10, s);
     }
 
+    function drawPixelBird(x, y, flap) {
+      const wingY = Math.sin(flap) > 0 ? -3 : 3;
+      ctx.fillStyle = '#23222b';
+      ctx.fillRect(x, y, 8, 4);
+      ctx.fillRect(x - 6, y + wingY, 6, 3);
+      ctx.fillRect(x + 8, y + wingY, 6, 3);
+    }
+
     function render() {
       const w = canvas.width;
       const h = canvas.height;
 
       const heightProgress = Math.min(stackedCaps.length / 35, 1);
-      if (heightProgress < 0.5) {
-        ctx.fillStyle = '#8ecae6';
-      } else if (heightProgress < 0.85) {
-        ctx.fillStyle = '#5e81ac';
-      } else {
-        ctx.fillStyle = '#24293e';
-      }
+      if (heightProgress < 0.45) ctx.fillStyle = '#8ecae6';
+      else if (heightProgress < 0.8) ctx.fillStyle = '#5e81ac';
+      else ctx.fillStyle = '#1e2235';
       ctx.fillRect(0, 0, w, h);
 
-      clouds.forEach(c => {
-        const drawY = ((c.y + cameraY * 0.35) % (h + 60));
-        drawPixelCloud(Math.round(c.x), Math.round(drawY), c.scale);
-      });
+      if (stackedCaps.length >= 20) {
+        const moonX = w - 64;
+        const moonY = 58;
+        ctx.fillStyle = '#ffca3a';
+        ctx.fillRect(moonX, moonY, 20, 24);
+        ctx.fillStyle = heightProgress < 0.8 ? '#5e81ac' : '#1e2235';
+        ctx.fillRect(moonX + 8, moonY - 2, 16, 20);
+      }
 
-      if (stackedCaps.length >= 12) {
+      if (stackedCaps.length >= 10) {
         ctx.fillStyle = '#fff3b0';
-        for (let s = 0; s < 14; s++) {
+        for (let s = 0; s < 16; s++) {
           const sx = (s * 73) % w;
           const sy = ((s * 97 + cameraY * 0.2) % (h - 80));
           ctx.fillRect(sx, sy, 4, 4);
         }
       }
 
+      if (shootingStar.active) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(Math.round(shootingStar.x), Math.round(shootingStar.y), 6, 6);
+        ctx.fillStyle = '#ffca3a';
+        ctx.fillRect(Math.round(shootingStar.x - 10), Math.round(shootingStar.y - 5), 8, 4);
+        ctx.fillRect(Math.round(shootingStar.x - 18), Math.round(shootingStar.y - 9), 6, 3);
+      }
+
+      clouds.forEach(c => {
+        const drawY = ((c.y + cameraY * 0.35) % (h + 60));
+        drawPixelCloud(Math.round(c.x), Math.round(drawY), c.scale);
+      });
+
+      if (stackedCaps.length < 18) {
+        birds.forEach(b => {
+          const by = ((b.y + cameraY * 0.45) % (h - 100));
+          drawPixelBird(Math.round(b.x), Math.round(by), b.flap);
+        });
+      }
+
       ctx.save();
       ctx.translate(0, Math.round(cameraY));
 
-      // 잔디 & 벽돌 바닥
       const floorTop = player.y - 2;
       ctx.fillStyle = '#23222b';
       ctx.fillRect(0, floorTop, w, 4);
       ctx.fillStyle = '#52b788';
       ctx.fillRect(0, floorTop + 4, w, 10);
       ctx.fillStyle = '#40916c';
-      for (let gx = 0; gx < w; gx += 16) {
-        ctx.fillRect(gx, floorTop + 10, 8, 4);
-      }
+      for (let gx = 0; gx < w; gx += 16) ctx.fillRect(gx, floorTop + 10, 8, 4);
       ctx.fillStyle = '#bc6c25';
       ctx.fillRect(0, floorTop + 14, w, 30);
       ctx.fillStyle = '#dda15e';
-      for (let bx = 0; bx < w; bx += 24) {
-        ctx.fillRect(bx + 2, floorTop + 16, 18, 8);
-      }
+      for (let bx = 0; bx < w; bx += 24) ctx.fillRect(bx + 2, floorTop + 16, 18, 8);
 
-      // 오리 근위병 캐릭터
       const isHappy = player.happyTimer > 0;
       drawDuckCharacter(ctx, player.x, player.y, PIXEL, isHappy, player.walkFrame);
 
-      // 포개져 쌓인 캡모자들
       const duckHeight = DUCK_BASE_GRID.length * PIXEL;
       const capStepHeight = 3 * PIXEL;
       const firstCapOverlap = 4 * PIXEL;
@@ -1043,11 +1121,23 @@
         currentStackY -= capStepHeight;
       }
 
-      // 떨어지는 아이템
       fallingItems.forEach(item => {
         if (item.type === 'cap') {
-          const swayX = Math.sin(item.phase) * 14;
-          drawPixelCap(ctx, item.x + swayX, item.y, PIXEL, item.colorScheme, item.dir);
+          const swayX = Math.sin(item.phase) * item.swayAmp;
+          const drawX = item.x + swayX;
+
+          if (item.capKind === 'gold') {
+            const sparkle = Math.sin(item.phase * 3) > 0;
+            ctx.fillStyle = sparkle ? '#ffffff' : '#ffca3a';
+            ctx.fillRect(drawX - 22, item.y - 24, 4, 4);
+            ctx.fillRect(drawX + 20, item.y - 12, 4, 4);
+          } else if (item.capKind === 'wind') {
+            ctx.fillStyle = 'rgba(255,255,255,0.75)';
+            ctx.fillRect(drawX - 28, item.y - 14, 10, 3);
+            ctx.fillRect(drawX + 18, item.y - 8, 10, 3);
+          }
+
+          drawPixelCap(ctx, drawX, item.y, PIXEL, item.colorScheme, item.dir);
         } else if (item.type === 'mic') {
           const pulse = Math.sin(item.phase * 2) > 0;
           ctx.fillStyle = pulse ? '#ffca3a' : '#ffffff';
@@ -1061,13 +1151,11 @@
         }
       });
 
-      // 파티클
       particles.forEach(p => {
         ctx.fillStyle = p.color;
         ctx.fillRect(Math.round(p.x), Math.round(p.y), Math.round(p.size), Math.round(p.size));
       });
 
-      // 플로팅 텍스트
       floatingEffects.forEach(f => {
         ctx.font = `bold ${f.size}px "DungGeunMo", "Press Start 2P", monospace`;
         ctx.textAlign = 'center';
@@ -1080,12 +1168,22 @@
       ctx.restore();
 
       if (gameState === 'PLAYING' && combo >= 2) {
-        ctx.font = 'bold 14px "DungGeunMo", "Press Start 2P", monospace';
+        const isFever = combo >= 5;
+        ctx.font = `bold ${isFever ? 17 : 14}px "DungGeunMo", "Press Start 2P", monospace`;
         ctx.textAlign = 'left';
         ctx.fillStyle = '#23222b';
-        ctx.fillText(`${combo} COMBO!`, 14, 26);
+        ctx.fillText(isFever ? `🔥 ${combo} FEVER!` : `${combo} COMBO!`, 14, 28);
+        ctx.fillStyle = isFever ? '#f44755' : '#ffca3a';
+        ctx.fillText(isFever ? `🔥 ${combo} FEVER!` : `${combo} COMBO!`, 12, 26);
+      }
+
+      if (milestoneBanner.timer > 0) {
+        ctx.font = 'bold 20px "DungGeunMo", "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#23222b';
+        ctx.fillText(milestoneBanner.text, Math.round(w / 2) + 2, 66);
         ctx.fillStyle = '#ffca3a';
-        ctx.fillText(`${combo} COMBO!`, 12, 24);
+        ctx.fillText(milestoneBanner.text, Math.round(w / 2), 64);
       }
     }
 
@@ -1099,11 +1197,6 @@
       requestAnimationFrame(gameLoop);
     }
 
-    /**
-     * ============================================================================
-     * 6. 이벤트 리스너 연결
-     * ============================================================================
-     */
     window.addEventListener('resize', resizeCanvas);
 
     window.addEventListener('keydown', (e) => {
@@ -1115,9 +1208,7 @@
         keys.right = true;
         pointerActive = false;
       }
-      if ((e.key === ' ' || e.key === 'Enter') && gameState !== 'PLAYING') {
-        startGame();
-      }
+      if ((e.key === ' ' || e.key === 'Enter') && gameState !== 'PLAYING') startGame();
     });
 
     window.addEventListener('keyup', (e) => {
@@ -1145,9 +1236,7 @@
     }, { passive: true });
 
     window.addEventListener('pointermove', (e) => {
-      if (pointerActive && gameState === 'PLAYING') {
-        updatePointerPosition(e.clientX);
-      }
+      if (pointerActive && gameState === 'PLAYING') updatePointerPosition(e.clientX);
     });
 
     window.addEventListener('touchmove', (e) => {
@@ -1180,7 +1269,6 @@
     bindHoldButton(btnLeft, 'left');
     bindHoldButton(btnRight, 'right');
 
-    // 버튼 클릭 및 모바일 터치 이벤트 연결
     btnSound.addEventListener('click', toggleSoundUI);
     btnStart.addEventListener('click', startGame);
     btnRestart.addEventListener('click', startGame);
@@ -1195,71 +1283,70 @@
       startGame();
     }, { passive: false });
 
-    // 초기 렌더링 및 게임 루프 시작
+    if (btnSaveScore) {
+      btnSaveScore.addEventListener('click', () => {
+        const card = document.createElement('canvas');
+        card.width = 600;
+        card.height = 340;
+        const cctx = card.getContext('2d');
+        cctx.imageSmoothingEnabled = false;
+
+        cctx.fillStyle = '#181824';
+        cctx.fillRect(0, 0, 600, 340);
+        cctx.fillStyle = '#fffdf7';
+        cctx.fillRect(24, 24, 552, 292);
+        cctx.strokeStyle = '#23222b';
+        cctx.lineWidth = 6;
+        cctx.strokeRect(24, 24, 552, 292);
+
+        cctx.fillStyle = '#f44755';
+        cctx.font = 'bold 28px "DungGeunMo", monospace';
+        cctx.fillText('또리 캡모자 쌓기! SCORE', 52, 78);
+
+        cctx.fillStyle = '#23222b';
+        cctx.font = 'bold 24px "DungGeunMo", monospace';
+        cctx.fillText(`최종 점수 : ${score.toLocaleString()} PTS`, 52, 138);
+        cctx.fillStyle = '#3b82f6';
+        cctx.fillText(`쌓은 모자 : ${stackedCaps.length} 개`, 52, 184);
+        cctx.fillStyle = '#d49b17';
+        cctx.fillText(`최고 기록 : ${bestScore.toLocaleString()} PTS`, 52, 230);
+
+        cctx.fillStyle = '#6b7280';
+        cctx.font = '15px "DungGeunMo", monospace';
+        cctx.fillText(window.location.href, 52, 286);
+
+        const pSize = 4;
+        drawDuckCharacter(cctx, 475, 285, pSize, false, 0);
+        const duckH = DUCK_BASE_GRID.length * pSize;
+        const capCount = Math.min(stackedCaps.length, 6);
+        for (let i = 0; i < capCount; i++) {
+          const capY = 285 - duckH + (4 * pSize) - (i * 3 * pSize);
+          drawPixelCap(cctx, 475, capY, pSize, stackedCaps[i].colorScheme, stackedCaps[i].dir);
+        }
+
+        card.toBlob(async (blob) => {
+          if (!blob) return;
+          const file = new File([blob], 'ddory_cap_score.png', { type: 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({ files: [file], title: '또리 캡모자 쌓기!' });
+              if (saveStatus) saveStatus.textContent = '공유 창에서 [이미지 저장]을 눌러주세요!';
+              return;
+            } catch (err) {}
+          }
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ddory_cap_score.png';
+          a.click();
+          if (saveStatus) saveStatus.textContent = '다운로드를 누른 뒤 사진에 저장하세요!';
+        }, 'image/png');
+      });
+    }
+
     resizeCanvas();
     updateHeartsUI();
     renderPreviewDuck();
-    if (btnSaveScore) {
-  btnSaveScore.addEventListener('click', () => {
-    const card = document.createElement('canvas');
-    card.width = 600;
-    card.height = 340;
-    const cctx = card.getContext('2d');
-    cctx.imageSmoothingEnabled = false;
-
-    cctx.fillStyle = '#181824';
-    cctx.fillRect(0, 0, 600, 340);
-    cctx.fillStyle = '#fffdf7';
-    cctx.fillRect(24, 24, 552, 292);
-    cctx.strokeStyle = '#23222b';
-    cctx.lineWidth = 6;
-    cctx.strokeRect(24, 24, 552, 292);
-
-    cctx.fillStyle = '#f44755';
-    cctx.font = 'bold 28px "DungGeunMo", monospace';
-    cctx.fillText('또리 캡모자 쌓기! SCORE', 52, 78);
-
-    cctx.fillStyle = '#23222b';
-    cctx.font = 'bold 24px "DungGeunMo", monospace';
-    cctx.fillText(`최종 점수 : ${score.toLocaleString()} PTS`, 52, 138);
-    cctx.fillStyle = '#3b82f6';
-    cctx.fillText(`쌓은 모자 : ${stackedCaps.length} 개`, 52, 184);
-    cctx.fillStyle = '#d49b17';
-    cctx.fillText(`최고 기록 : ${bestScore.toLocaleString()} PTS`, 52, 230);
-
-    cctx.fillStyle = '#6b7280';
-    cctx.font = '15px "DungGeunMo", monospace';
-    cctx.fillText(window.location.href, 52, 286);
-
-    const pSize = 4;
-    drawDuckCharacter(cctx, 475, 285, pSize, false, 0);
-    const duckH = DUCK_BASE_GRID.length * pSize;
-    const capCount = Math.min(stackedCaps.length, 6);
-    for (let i = 0; i < capCount; i++) {
-      const capY = 285 - duckH + (4 * pSize) - (i * 3 * pSize);
-      drawPixelCap(cctx, 475, capY, pSize, stackedCaps[i].colorScheme, stackedCaps[i].dir);
-    }
-
-    card.toBlob(async (blob) => {
-      if (!blob) return;
-      const file = new File([blob], 'ddory_cap_score.png', { type: 'image/png' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title: '또리 캡모자 쌓기!' });
-          if (saveStatus) saveStatus.textContent = '공유 창에서 [이미지 저장]을 눌러주세요!';
-          return;
-        } catch (err) {}
-      }
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'ddory_cap_score.png';
-      a.click();
-      if (saveStatus) saveStatus.textContent = '다운로드를 누른 뒤 사진에 저장하세요!';
-    }, 'image/png');
-  });
-}
-
     requestAnimationFrame(gameLoop);
   </script>
 </body>
