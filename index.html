@@ -197,11 +197,11 @@
             <canvas id="previewCanvas" width="128" height="128" class="w-28 h-28"></canvas>
           </div>
 
-          <div class="text-xs sm:text-sm text-gray-700 space-y-1.5 bg-[#f4f1ea] border-2 border-[#23222b] p-3 w-full text-left">
-            <p>🧢 정중앙에 맞추면 <b>PERFECT!</b> 보너스 + 흔들림 진정!</p>
-            <p>👑 <b>황금 모자</b>는 보너스 점수 + 균형 복구, <b>돌풍 모자</b> 주의!</p>
-            <p>🎤 반짝이는 <b>마이크</b>를 잡으면 보너스 <span class="text-[#f44755] font-bold">^ ^ ♪</span></p>
+          <div class="text-xs sm:text-sm text-gray-700 space-y-1.5 bg-[#f4f1ea] border-2 border-[#23222b] p-3 w-full text-<p>🧢 떨어지는 <b>캡모자</b>를 머리 위에 쌓으세요!</p>
+            <p>🎤 반짝이는 <b>마이크</b>를 잡으면 보너스 <span class="text-[#f44755] font-bold">&gt;.&lt; ♪</span></p>
+            <p>⌨️ 조작: <b>◀ / ▶ 버튼</b> 또는 화면 터치/드래그</p>
           </div>
+          
 
           <button id="btn-start" type="button" class="pixel-btn pixel-btn-red w-full py-3.5 text-lg sm:text-xl font-bold animate-pixel-bounce">
             ▶ 게임 시작
@@ -359,7 +359,7 @@
     };
 
     const DUCK_BASE_GRID = [
-      "......KKKKKKKKKKKKKK......",
+          "......KKKKKKKKKKKKKK......",
       ".....KHHHHHHHHHHHHHHK.....",
       "....KHHHHHHHHHHHHHHHHK....",
       "...KHHHHHHHHHHHHHHHHHHK...",
@@ -375,34 +375,34 @@
       "..KHHHHHHHHHHHHHHHHHHHHK..",
       "..KHHHHHHHHHHHHHHHHHHHHK..",
       "...CWWWWWWWWWWWWWWWWWWC...",
-      "...CWWEEEEWWWWWWEEEEWWC...",
-      "...CWEWEEWEWWWWEWEEWEWC...",
-      "...CWEEWWEEWWWWEEWWEEWC...",
-      "...CWWEEEEWWWWWWEEEEWWC...",
-      "...CWWWWWWWWBBWWWWWWCWC...",
-      "...CWWWWWWBBBBBBWWCWWWC...",
-      "....CWWWBBBBBBBBBBWCWWC...",
-      "....CWWWOOOOOOOOOOWWWWC...",
-      ".....CWWBBBBBBBBBBWWWC....",
-      "....CYYCMMMMMMMMMMCYYC....",
-      "..GGGYYCRRRRRRRRRRCYYGGG..",
-      ".GWWWWWSRRRRYYRRRRWWWWWWG.",
-      "GWWWWWWWRRRRRRRRRRWWWWWWWG",
-      "GWWWWWWWRRRRYYRRRRWWWWWWWG",
-      ".GWWSSWSRRRRRRRRRRSWSSWWG.",
-      "..GGGGG.MRRRYYRRRM.GGGGG..",
-      "........MRRRRRRRRM........",
-      ".........MMMMMMMM.........",
-      ".........OBBO.OBBO........",
-      "........OBBBO.OBBBO.......",
-      ".........OOO...OOO........"
+      "...CWWEEEEWWWWWWEEEEWWC...", // 14: 반타원 윗눈꺼풀
+      "...CWEWEEWEWWWWEWEEWEWC...", // 15: 반타원 눈동자 + 흰자위
+      "...CWEWEEWEWWWWEWEEWEWC...", // 16: 둥근 반타원 하단 곡선
+      "...CWWEEEEWWWWWWEEEEWWC...", // 17: 반타원 밑단
+      "...CWWWWWWWWBBWWWWWWCWC...", // 18: 부리 윗부분
+      "...CWWWWWWBBBBBBWWCWWWC...", // 19: 볼 점 1
+      "....CWWWBBBBBBBBBBWCWWC...", // 20: 부리 + 볼 점 2, 3
+      "....CWWWOOOOOOOOOOWWWWC...", // 21: 부리 가운데 가로선
+      ".....CWWBBBBBBBBBBWWWC....", // 22: 부리 아랫부분
+      "....CYYCMMMMMMMMMMCYYC....", // 23: 노란 견장 + 빨간 옷 깃
+      "..GGGYYCRRRRRRRRRRCYYGGG..", // 24: 연보라 테두리 날개 + 제복
+      ".GWWWWWSRRRRYYRRRRWWWWWWG.", // 25: 날개 + 첫째 단추
+      "GWWWWWWWRRRRRRRRRRWWWWWWWG", // 26: 날개
+      "GWWWWWWWRRRRYYRRRRWWWWWWWG", // 27: 날개 + 둘째 단추
+      ".GWWSSWSRRRRRRRRRRSWSSWWG.", // 28: 날개 아랫부분
+      "..GGGGG.MRRRYYRRRM.GGGGG..", // 29: 날개 하단 테두리 + 셋째 단추
+      "........MRRRRRRRRM........", // 30: 제복 밑단
+      ".........MMMMMMMM.........", // 31: 제복 어두운 붉은색 밑단
+      ".........OBBO.OBBO........", // 32: 다리
+      "........OBBBO.OBBBO.......", // 33: 발
+      ".........OOO...OOO........"  // 34: 발바닥 테두리
     ];
 
     const HAPPY_FACE_PATCH = {
       16: "...CWWWEEWWWWWWWWEEWWWC...",
       17: "...CWWEWWEEWWWWEEWWEWWC...",
-      18: "...CEWWWWWWEWWEWWWWWWEWC...",
-      19: "...CWWWWWWWWWWWWWWWWWWC..."
+      18: "...CWWWWWWWEWWEWWWWWMEC...",
+      19: "...CWWWWWWWWWWWWWWWWWWC...",
     };
 
     function drawDuckCharacter(ctx, centerX, bottomY, pixelSize, isHappy = false, walkFrame = 0) {
