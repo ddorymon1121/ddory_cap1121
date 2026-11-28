@@ -837,12 +837,13 @@
 
       for (let i = 0; i < stackedCaps.length; i++) {
         const cap = stackedCaps[i];
-        const factor = (i + 1) * 0.032;
-        cap.offsetX -= actualDeltaX * Math.min(factor, 0.55);
-        const springForce = -cap.offsetX * 16;
-        cap.wobbleVel = (cap.wobbleVel + springForce * dt) * 0.84;
+        const factor = (i + 1) * 0.018;
+        cap.offsetX -= actualDeltaX * Math.min(factor, 0.35);
+        const springForce = -cap.offsetX * 4.5;
+        cap.wobbleVel = (cap.wobbleVel + springForce * dt) * 0.72;
         cap.offsetX += cap.wobbleVel * dt;
-      }
+        cap.offsetX = Math.max(-36, Math.min(36, cap.offsetX));
+        }
 
       const capStepHeight = 3 * PIXEL;
       const duckHeight = DUCK_BASE_GRID.length * PIXEL;
@@ -874,8 +875,12 @@
         item.phase += dt * 5;
 
         if (item.type === 'cap') {
-          const dx = Math.abs(item.x - catchCenterX);
+          const dxTop = Math.abs(item.x - catchCenterX);
+          const dxBody = Math.abs(item.x - player.x);
+          const dx = Math.min(dxTop, dxBody);
           const dy = Math.abs(item.y - catchTopY);
+
+          if (dx < 58 && dy < 38) {
 
           if (dx < 46 && dy < 24) {
             combo += 1;
